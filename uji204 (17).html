@@ -2,7 +2,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>UJI204</title>
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,700&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,700;9..40,800&display=swap" rel="stylesheet">
 <style>
 /* ═══════════════════════════════════════════
@@ -10,7 +11,6 @@
    Clean rebuild. No duplicates. No conflicts.
 ═══════════════════════════════════════════ */
 
-@import url('https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,700;9..40,800&display=swap');
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -181,6 +181,7 @@ header {
 .cart-item-name { font-size: 15px; font-weight: 600; margin-bottom: 4px; }
 .cart-item-ingredients { font-size: 11px; color: var(--text-muted); margin-bottom: 3px; line-height: 1.4; }
 .cart-item-plan { font-size: 12px; font-weight: 500; color: var(--text); margin-top: 2px; }
+.cart-item-qty { font-size: 12px; color: var(--text-muted); margin-top: 5px; }
 .cart-item-remove { background: none; border: none; cursor: pointer; padding: 0; color: var(--text-muted); font-size: 12px; font-family: var(--font); transition: color 0.2s; align-self: center; }
 .cart-item-remove:hover { color: var(--text); }
 .cart-foot { padding: 24px 28px; border-top: 1px solid rgba(0,0,0,0.09); }
@@ -586,49 +587,6 @@ footer p { font-size: 12px; color: var(--text-muted); }
     justify-content: center;
     gap: 6px;
     position: fixed;
-    bottom: 12px;
-    left: 0;
-    right: 0;
-    z-index: 301;
-    background: none;
-    border: none;
-    cursor: pointer;
-    font-family: var(--font);
-    font-size: 14px;
-    font-weight: 500;
-    color: #999;
-    padding: 16px;
-    -webkit-tap-highlight-color: transparent;
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.3s ease;
-  }
-  .search-close-mobile svg {
-    width: 14px;
-    height: 14px;
-    stroke: #999;
-    flex-shrink: 0;
-  }
-  .search-overlay.open ~ .search-close-mobile,
-  .search-overlay.open + .search-close-mobile {
-    opacity: 1;
-    pointer-events: auto;
-  }
-}
-
-
-/* ── SEARCH CLOSE MOBILE ── */
-.search-close-mobile {
-  display: none;
-}
-
-@media (max-width: 767px) {
-  .search-close-mobile {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 6px;
-    position: fixed;
     bottom: 0;
     left: 0;
     right: 0;
@@ -644,19 +602,23 @@ footer p { font-size: 12px; color: var(--text-muted); }
     color: #aaa;
     -webkit-tap-highlight-color: transparent;
     z-index: 301;
-    /* Expand tap area to full container */
     touch-action: manipulation;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease, color 0.15s ease;
+  }
+  .search-overlay.open .search-close-mobile {
+    opacity: 1;
+    pointer-events: auto;
   }
   .search-close-mobile:active {
     color: var(--text);
   }
   .search-close-mobile svg {
-    stroke: #aaa;
+    width: 14px;
+    height: 14px;
+    stroke: currentColor;
     flex-shrink: 0;
-    transition: stroke 0.15s;
-  }
-  .search-close-mobile:active svg {
-    stroke: var(--text);
   }
 }
 
@@ -1083,7 +1045,7 @@ header {
   <div class="mobile-dropdown-sheet">
     <div class="mobile-nav-slides" id="mobileNavSlides">
       <div class="mobile-nav-main">
-        <div class="mobile-nav-item" onclick="closeMobileDropdown(); showPage('home')">
+        <div class="mobile-nav-item" onclick="closeMobileDropdown(); switchPage('home')">
           About
         </div>
         <div class="mobile-nav-item" onclick="showMobileExplore()">
@@ -1144,12 +1106,6 @@ header {
     Close
   </button>
 </div>
-<button class="search-close-mobile" onclick="closeSearch()" aria-label="Close search">
-  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
-    <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
-  </svg>
-  Close
-</button>
 
 <!-- CART -->
 <div class="cart-overlay" id="cartOverlay" onclick="closeCart()"></div>
@@ -1166,7 +1122,7 @@ header {
   <div class="cart-foot">
     <div class="cart-total">
       <span>Total</span>
-      <strong id="cartTotal">$0.00</strong>
+      <strong id="cartTotal">€0</strong>
     </div>
     <button class="checkout-btn">Checkout</button>
   </div>
@@ -1493,7 +1449,7 @@ function openSearch() {
 function closeSearch() {
   document.getElementById('searchOverlay').classList.remove('open');
   document.getElementById('searchInput').value = '';
-  document.getElementById('searchResults').innerHTML = '';
+  clearNode(document.getElementById('searchResults'));
   var hint = document.getElementById('searchHint');
   if (hint) hint.style.display = 'block';
 }
@@ -1504,27 +1460,56 @@ function doSearch(q) {
   renderSearchResults(q);
 }
 
+function clearNode(node) {
+  while (node.firstChild) node.removeChild(node.firstChild);
+}
+
+function formatPrice(amount) {
+  return '€' + (amount || 0).toFixed(0);
+}
+
+function appendTextElement(parent, tagName, className, text) {
+  var el = document.createElement(tagName);
+  if (className) el.className = className;
+  el.textContent = text;
+  parent.appendChild(el);
+  return el;
+}
+
 function renderSearchResults(q) {
   var container = document.getElementById('searchResults');
-  var matches = q.trim() === ''
+  clearNode(container);
+
+  var query = q.trim().toLowerCase();
+  var matches = query === ''
     ? PRODUCTS
     : PRODUCTS.filter(function(p) {
-        return p.name.toLowerCase().indexOf(q.toLowerCase()) >= 0 ||
-               p.sub.toLowerCase().indexOf(q.toLowerCase()) >= 0;
+        return p.name.toLowerCase().indexOf(query) >= 0 ||
+               p.sub.toLowerCase().indexOf(query) >= 0;
       });
+
   if (matches.length === 0) {
-    container.innerHTML = '<p class="search-empty">No products found.</p>';
+    appendTextElement(container, 'p', 'search-empty', 'No products found.');
     return;
   }
-  var html = '';
-  for (var i = 0; i < matches.length; i++) {
-    var p = matches[i];
-    html += '<div class="search-result-item" onclick="goToProduct(\'' + p.id + '\')">'
-      + '<div><div class="search-result-name">' + p.name + '</div>'
-      + '<div class="search-result-sub">' + p.sub + '</div></div>'
-      + '<span style="font-size:20px">&#8599;</span></div>';
-  }
-  container.innerHTML = html;
+
+  matches.forEach(function(p) {
+    var item = document.createElement('div');
+    item.className = 'search-result-item';
+    item.addEventListener('click', function() { goToProduct(p.id); });
+
+    var copy = document.createElement('div');
+    appendTextElement(copy, 'div', 'search-result-name', p.name);
+    appendTextElement(copy, 'div', 'search-result-sub', p.sub);
+
+    var arrow = document.createElement('span');
+    arrow.style.fontSize = '20px';
+    arrow.textContent = '↗';
+
+    item.appendChild(copy);
+    item.appendChild(arrow);
+    container.appendChild(item);
+  });
 }
 
 function goToProduct(id) {
@@ -1543,6 +1528,7 @@ function addToCart(name, sub, id) {
   if (existing) { existing.qty++; }
   else {
     const product = PRODUCTS.find(p => p.id === id);
+    if (!product) return;
     cart.push({ id, name, sub, price: product.price, qty: 1 });
   }
   updateCartBadge();
@@ -1573,31 +1559,54 @@ function updateCartBadge() {
 
 function renderCart() {
   var body = document.getElementById('cartBody');
+  clearNode(body);
+
   if (cart.length === 0) {
-    body.innerHTML = '<p class="cart-empty">Your cart is empty.</p>';
+    appendTextElement(body, 'p', 'cart-empty', 'Your cart is empty.');
     document.getElementById('cartTotal').textContent = '€0';
     return;
   }
-  var html = '';
-  for (var i = 0; i < cart.length; i++) {
-    var item = cart[i];
+
+  var total = 0;
+  cart.forEach(function(item) {
+    var qty = item.qty || 1;
+    total += (item.price || 0) * qty;
+
     var imgId = (item.id.indexOf('ion-sub') >= 0) ? 'ion' : item.id;
     var imgEl = document.querySelector('#' + imgId + ' .product-image img');
     var src = imgEl ? imgEl.src : '';
-    var details = '';
-    if (item.ingredients) details += '<div class="cart-item-ingredients">' + item.ingredients + '</div>';
-    if (item.plan) details += '<div class="cart-item-plan">' + item.plan + ' · ' + item.period + ' — ' + item.priceLabel + '</div>';
-    else if (item.sub) details += '<div class="cart-item-plan">' + item.sub + '</div>';
-    html += '<div class="cart-item">'
-      + '<img class="cart-item-img" src="' + src + '" alt="' + item.name + '">'
-      + '<div class="cart-item-info"><div class="cart-item-name">' + item.name + '</div>' + details + '</div>'
-      + '<button class="cart-item-remove" onclick="removeFromCart(\'' + item.id + '\')">&#10005;</button>'
-      + '</div>';
-  }
-  body.innerHTML = html;
-  var total = 0;
-  for (var i = 0; i < cart.length; i++) total += (cart[i].price || 0);
-  document.getElementById('cartTotal').textContent = '€' + total.toFixed(0);
+
+    var row = document.createElement('div');
+    row.className = 'cart-item';
+
+    var img = document.createElement('img');
+    img.className = 'cart-item-img';
+    img.src = src;
+    img.alt = item.name;
+    row.appendChild(img);
+
+    var info = document.createElement('div');
+    info.className = 'cart-item-info';
+    appendTextElement(info, 'div', 'cart-item-name', item.name);
+
+    if (item.ingredients) appendTextElement(info, 'div', 'cart-item-ingredients', item.ingredients);
+    if (item.plan) appendTextElement(info, 'div', 'cart-item-plan', item.plan + ' · ' + item.period + ' — ' + item.priceLabel);
+    else if (item.sub) appendTextElement(info, 'div', 'cart-item-plan', item.sub);
+    appendTextElement(info, 'div', 'cart-item-qty', 'Qty: ' + qty);
+
+    var remove = document.createElement('button');
+    remove.className = 'cart-item-remove';
+    remove.type = 'button';
+    remove.setAttribute('aria-label', 'Remove ' + item.name + ' from cart');
+    remove.textContent = '✕';
+    remove.addEventListener('click', function() { removeFromCart(item.id); });
+
+    row.appendChild(info);
+    row.appendChild(remove);
+    body.appendChild(row);
+  });
+
+  document.getElementById('cartTotal').textContent = formatPrice(total);
 }
 
 function openCart() {
@@ -1703,7 +1712,10 @@ function setPeriod(e, plan, period) {
   var priceEl = document.getElementById(plan + '-price');
   var saveEl  = document.getElementById(plan + '-save');
   var data = subPrices[plan][period];
-  priceEl.innerHTML = data.label.replace('/mo','<span class="sub-price-period">/mo</span>').replace('/yr','<span class="sub-price-period">/yr</span>');
+  clearNode(priceEl);
+  var suffix = period === 'monthly' ? '/mo' : '/yr';
+  priceEl.appendChild(document.createTextNode(data.label.replace(suffix, '')));
+  appendTextElement(priceEl, 'span', 'sub-price-period', suffix);
   saveEl.textContent = data.save;
   saveEl.style.opacity = data.save ? '1' : '0';
 }
