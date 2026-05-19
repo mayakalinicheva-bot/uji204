@@ -346,6 +346,7 @@ footer p { font-size: 12px; color: var(--text-muted); }
 .sub-learn-btn { background: rgba(0,0,0,0.05); border: 1.5px solid transparent; }
 .sub-learn-btn:hover { border-color: rgba(0,0,0,0.2); }
 .sub-actions { display: flex; align-items: center; justify-content: space-between; }
+.sub-actions .back-btn { margin-top: 0; }
 .add-to-bag-btn {
   background: var(--green); color: #fff; border: none; border-radius: var(--radius);
   padding: 13px 32px; font-size: 14px; font-weight: 600; font-family: var(--font); cursor: pointer;
@@ -789,10 +790,10 @@ header {
   white-space: nowrap;
   -webkit-tap-highlight-color: transparent;
   -webkit-font-smoothing: antialiased;
-  transition: background 0.2s ease, transform 0.15s ease;
+  transition: background 0.2s ease;
 }
-.intro-cta button:hover { background: var(--green-dark); transform: scale(1.03); }
-.intro-cta button:active { transform: scale(0.97); }
+.intro-cta button:hover { background: var(--green-dark); }
+.intro-cta button:active { opacity: 0.85; }
 
 /* Progress bar */
 .intro-progress {
@@ -1531,10 +1532,13 @@ function goToProduct(id) {
   closeSearch();
   closeMobileDropdown();
   switchPage('home');
-  setTimeout(function() {
-    var el = document.getElementById(id);
-    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-  }, 80);
+  requestAnimationFrame(function() {
+    requestAnimationFrame(function() {
+      var el = document.getElementById(id);
+      if (!el) return;
+      window.scrollTo({ top: el.offsetTop, behavior: 'instant' });
+    });
+  });
 }
 
 
