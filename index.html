@@ -247,14 +247,16 @@ header {
   flex: 1;
   min-height: 0;
   width: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: flex-end;
+  position: relative;
   overflow: hidden;
 }
 .product-image img {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
   width: auto;
-  max-width: 90%;
+  max-width: 88%;
   height: 100%;
   object-fit: contain;
   object-position: center bottom;
@@ -534,12 +536,13 @@ footer p { font-size: 12px; color: var(--text-muted); }
   }
   .btn-buy, .btn-learn { width: 100%; max-width: 340px; justify-content: center; }
   .product-image {
-    width: 100%; margin: 0; flex: 1;
-    display: flex; align-items: flex-end; justify-content: center;
-    min-height: 0; overflow: hidden;
+    width: 100%; flex: 1; min-height: 0;
+    position: relative; overflow: hidden;
   }
   .product-image img {
-    width: auto; height: 100%; max-width: 100%;
+    position: absolute; bottom: 0; left: 50%;
+    transform: translateX(-50%);
+    width: auto; height: 100%; max-width: 92%;
     object-fit: contain; object-position: center bottom;
   }
 
@@ -1131,13 +1134,6 @@ footer p {
     Close
   </button>
 </div>
-<button class="search-close-mobile" onclick="closeSearch()" aria-label="Close search">
-  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
-    <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
-  </svg>
-  Close
-</button>
-
 <!-- CART -->
 <div class="cart-overlay" id="cartOverlay" onclick="closeCart()"></div>
 <div class="cart-drawer" id="cartDrawer">
