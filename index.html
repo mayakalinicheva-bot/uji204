@@ -234,10 +234,10 @@ header {
 
 /* ── HOME SECTIONS ── */
 .product-section {
-  min-height: 100svh; background: var(--bg);
+  min-height: 88svh; background: var(--bg);
   display: flex; flex-direction: column;
   align-items: center; justify-content: flex-start;
-  padding-top: 72px; padding-bottom: 48px;
+  padding-top: 72px; padding-bottom: 20px;
   text-align: center;
 }
 .product-name {
@@ -283,6 +283,7 @@ header {
 .product-image img {
   display: block;
   width: 100%;
+  margin-top: -5%; /* clip transparent PNG top-padding to pull bottle up */
   height: auto;
 }
 
@@ -541,9 +542,9 @@ footer p { font-size: 12px; color: var(--text-muted); }
   .burger-btn.open span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
 
   .product-section {
-    min-height: 100svh;
+    min-height: 88svh;
     padding-top: 72px;
-    padding-bottom: 48px;
+    padding-bottom: 20px;
     padding-left: 0;
     padding-right: 0;
   }
@@ -567,7 +568,7 @@ footer p { font-size: 12px; color: var(--text-muted); }
   .btn-buy, .btn-learn { width: 100%; justify-content: center; height: 44px; }
   .product-image {
     width: 96vw;
-    margin: 36px auto 0;
+    margin: 12px auto 0;
     overflow: hidden;
   }
   /* zoom 170% to fill transparent PNG padding and make bottle dominant */
@@ -575,6 +576,7 @@ footer p { font-size: 12px; color: var(--text-muted); }
     display: block;
     width: 170%;
     margin-left: -35%;
+    margin-top: -8%; /* clip transparent PNG top-padding to pull bottle up */
     height: auto;
   }
 
@@ -904,16 +906,18 @@ footer p { font-size: 12px; color: var(--text-muted); }
 @media (min-width: 768px) and (max-width: 1024px) {
   .product-section {
     padding-top: 72px;
+    padding-bottom: 20px;
   }
   .product-image {
     width: min(94vw, 820px);
-    margin: 20px auto 0;
+    margin: 12px auto 0;
     overflow: hidden;
   }
   /* zoom 130% on tablet — moderately tighter transparent padding */
   .product-image img {
     width: 130%;
     margin-left: -15%;
+    margin-top: -6%;
     height: auto;
   }
 }
@@ -977,15 +981,19 @@ footer p { font-size: 12px; color: var(--text-muted); }
 
 /* Desktop */
 @media (min-width: 1025px) {
+  .product-section {
+    padding-bottom: 20px;
+  }
   .product-image {
     width: min(96vw, 1000px);
-    margin: 16px auto 0;
+    margin: 12px auto 0;
     overflow: hidden;
   }
   /* zoom 115% on desktop — subtle tighten of transparent frame */
   .product-image img {
     width: 115%;
     margin-left: -7.5%;
+    margin-top: -5%;
     height: auto;
   }
 }
