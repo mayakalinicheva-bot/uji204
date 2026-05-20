@@ -334,17 +334,38 @@ footer p { font-size: 12px; color: var(--text-muted); }
 .choices { display: flex; gap: 20px; flex-wrap: wrap; align-items: flex-start; }
 .choice-wrap { display: flex; flex-direction: column; align-items: center; gap: 10px; cursor: pointer; width: 64px; }
 .choice-circle {
-  width: 52px; height: 52px; border-radius: 50%; border: 2px solid transparent;
-  position: relative; cursor: pointer; transition: border-color 0.22s ease, transform 0.18s ease;
+  width: 52px; height: 52px; border-radius: 50%;
+  border: 1px solid rgba(255,255,255,0.62);
+  border-bottom-color: rgba(0,0,0,0.06);
+  position: relative; cursor: pointer;
+  transition: border-color 0.22s ease, transform 0.18s ease, box-shadow 0.22s ease;
   box-shadow:
-    inset 0 1px 2px rgba(0,0,0,0.08),
-    inset 0 -1px 1px rgba(255,255,255,0.4),
-    0 1px 2px rgba(0,0,0,0.06),
-    0 0 0 1.5px rgba(0,0,0,0.10);
+    0 2px 0 rgba(255,255,255,0.55) inset,
+    0 -0.5px 0 rgba(0,0,0,0.04) inset,
+    0 0 0 0.5px rgba(255,255,255,0.20),
+    0 2px 8px rgba(0,0,0,0.07);
 }
 .choice-circle::after { content:''; position:absolute; inset:0; border-radius:50%; background: radial-gradient(circle at 35% 35%, rgba(255,255,255,0.4) 0%, transparent 70%); pointer-events:none; }
-.choice-wrap:hover .choice-circle { border-color: rgba(0,0,0,0.18); transform: scale(1.06); }
-.choice-wrap.active .choice-circle { border-color: var(--green); transform: scale(1.08); box-shadow: inset 0 1px 2px rgba(0,0,0,0.08), 0 0 0 3px rgba(61,186,95,0.15); }
+.choice-wrap:hover .choice-circle {
+  border-color: rgba(255,255,255,0.82);
+  transform: scale(1.06);
+  box-shadow:
+    0 2.5px 0 rgba(255,255,255,0.64) inset,
+    0 -0.5px 0 rgba(0,0,0,0.04) inset,
+    0 0 0 0.5px rgba(255,255,255,0.28),
+    0 4px 12px rgba(0,0,0,0.09);
+}
+.choice-wrap.active .choice-circle {
+  border: 1.5px solid rgba(61,186,95,0.72);
+  border-bottom-color: rgba(46,160,79,0.38);
+  transform: scale(1.08);
+  box-shadow:
+    0 2px 0 rgba(255,255,255,0.55) inset,
+    0 -0.5px 0 rgba(0,0,0,0.05) inset,
+    0 0 0 0.5px rgba(61,186,95,0.28),
+    0 0 0 3px rgba(61,186,95,0.14),
+    0 3px 12px rgba(61,186,95,0.22);
+}
 .choice-label { font-size: 11px; color: var(--text-muted); text-align: center; line-height: 1.3; opacity: 0; transition: opacity 0.2s ease; }
 .choice-wrap:hover .choice-label, .choice-wrap.active .choice-label { opacity: 1; color: var(--text); }
 .back-btn {
@@ -622,11 +643,15 @@ footer p { font-size: 12px; color: var(--text-muted); }
     border-color: transparent !important;
     transform: none !important;
   }
-  /* Active: green border only */
+  /* Active: green glass border only */
   .choice-wrap.active .choice-circle {
-    border-color: var(--green) !important;
+    border: 1.5px solid rgba(61,186,95,0.72) !important;
+    border-bottom-color: rgba(46,160,79,0.38) !important;
     transform: scale(1.08) !important;
-    box-shadow: inset 0 1px 2px rgba(0,0,0,0.08), 0 0 0 3px rgba(61,186,95,0.15) !important;
+    box-shadow:
+      0 2px 0 rgba(255,255,255,0.55) inset,
+      0 0 0 3px rgba(61,186,95,0.14),
+      0 3px 12px rgba(61,186,95,0.22) !important;
   }
 }
 
@@ -848,131 +873,159 @@ footer p { font-size: 12px; color: var(--text-muted); }
 .intro-cta button:active { opacity: 0.85; }
 
 /* ══════════════════════════════════════
-   LIQUID GLASS BUTTON TREATMENT
-   Preserves original palette — adds
-   translucency, surface depth, reflections
+   LIQUID GLASS SYSTEM — ultra-transparent
+   Apple VisionOS-inspired material
 ══════════════════════════════════════ */
 
-/* ── Green glass: Buy now / Add to Bag / Checkout / Intro CTA ── */
+/* ── Green liquid glass: primary CTAs ── */
 .btn-buy,
 .add-to-bag-btn:not(:disabled),
 .checkout-btn,
 .intro-cta button {
   background: linear-gradient(180deg,
-    rgba(61, 186, 95, 0.90) 0%,
-    rgba(46, 160, 79, 0.84) 100%);
-  border: 1px solid rgba(255,255,255,0.32);
-  border-bottom-color: rgba(0,0,0,0.14);
-  backdrop-filter: blur(6px) saturate(180%) brightness(1.06);
-  -webkit-backdrop-filter: blur(6px) saturate(180%) brightness(1.06);
+    rgba(61, 186, 95, 0.68) 0%,
+    rgba(46, 160, 79, 0.52) 100%);
+  border: 1px solid rgba(255,255,255,0.50);
+  border-bottom-color: rgba(0,0,0,0.10);
+  backdrop-filter: blur(10px) saturate(220%) brightness(1.10);
+  -webkit-backdrop-filter: blur(10px) saturate(220%) brightness(1.10);
   box-shadow:
-    0 1.5px 0 rgba(255,255,255,0.28) inset,
-    0 -1px 0 rgba(0,0,0,0.10) inset,
-    0 4px 16px rgba(61,186,95,0.28),
-    0 1px 3px rgba(0,0,0,0.08);
-  transition: background 0.2s, box-shadow 0.2s;
+    0 2px 0 rgba(255,255,255,0.44) inset,
+    0 -1px 0 rgba(0,0,0,0.07) inset,
+    0 0 0 0.5px rgba(255,255,255,0.24),
+    0 4px 20px rgba(61,186,95,0.20),
+    0 1px 4px rgba(0,0,0,0.05);
+  transition: background 0.22s, box-shadow 0.22s;
 }
 .btn-buy:hover,
 .add-to-bag-btn:hover:not(:disabled),
 .checkout-btn:hover,
 .intro-cta button:hover {
   background: linear-gradient(180deg,
-    rgba(61, 186, 95, 0.97) 0%,
-    rgba(46, 160, 79, 0.93) 100%);
+    rgba(61, 186, 95, 0.82) 0%,
+    rgba(46, 160, 79, 0.68) 100%);
   box-shadow:
-    0 1.5px 0 rgba(255,255,255,0.28) inset,
-    0 -1px 0 rgba(0,0,0,0.10) inset,
-    0 6px 20px rgba(61,186,95,0.36),
-    0 2px 6px rgba(0,0,0,0.10);
+    0 2px 0 rgba(255,255,255,0.50) inset,
+    0 -1px 0 rgba(0,0,0,0.07) inset,
+    0 0 0 0.5px rgba(255,255,255,0.30),
+    0 6px 26px rgba(61,186,95,0.28),
+    0 2px 6px rgba(0,0,0,0.07);
+}
+.btn-buy:active,
+.add-to-bag-btn:active:not(:disabled),
+.checkout-btn:active,
+.intro-cta button:active {
+  background: linear-gradient(180deg,
+    rgba(46, 160, 79, 0.74) 0%,
+    rgba(36, 140, 64, 0.60) 100%);
+  box-shadow:
+    0 1px 0 rgba(255,255,255,0.32) inset,
+    0 -0.5px 0 rgba(0,0,0,0.06) inset,
+    0 2px 10px rgba(61,186,95,0.15);
+  transform: scale(0.98);
+  opacity: 1;
 }
 
-/* ── Frosted glass: Learn more ── */
+/* ── Ultra-clear frosted glass: secondary ── */
 .btn-learn {
   background: linear-gradient(180deg,
-    rgba(255,255,255,0.56) 0%,
-    rgba(255,255,255,0.32) 100%);
-  border: 1px solid rgba(255,255,255,0.72);
-  border-bottom-color: rgba(0,0,0,0.06);
-  backdrop-filter: blur(10px) saturate(180%);
-  -webkit-backdrop-filter: blur(10px) saturate(180%);
+    rgba(255,255,255,0.28) 0%,
+    rgba(255,255,255,0.12) 100%);
+  border: 1px solid rgba(255,255,255,0.74);
+  border-bottom-color: rgba(0,0,0,0.05);
+  backdrop-filter: blur(14px) saturate(200%) brightness(1.02);
+  -webkit-backdrop-filter: blur(14px) saturate(200%) brightness(1.02);
   box-shadow:
-    0 1.5px 0 rgba(255,255,255,0.90) inset,
-    0 -1px 0 rgba(0,0,0,0.04) inset,
-    0 4px 12px rgba(0,0,0,0.07),
-    0 1px 3px rgba(0,0,0,0.04);
-  transition: background 0.2s, box-shadow 0.2s, border-color 0.2s, color 0.2s;
+    0 2px 0 rgba(255,255,255,0.96) inset,
+    0 -0.5px 0 rgba(0,0,0,0.03) inset,
+    0 0 0 0.5px rgba(255,255,255,0.26),
+    0 3px 12px rgba(0,0,0,0.05),
+    0 1px 3px rgba(0,0,0,0.03);
+  color: var(--text);
+  transition: background 0.22s, box-shadow 0.22s, border-color 0.22s, color 0.22s;
 }
 .btn-learn:hover {
   background: linear-gradient(180deg,
-    rgba(14, 14, 14, 0.92) 0%,
-    rgba(6, 6, 6, 0.88) 100%);
+    rgba(12, 12, 12, 0.88) 0%,
+    rgba(4, 4, 4, 0.82) 100%);
   border-color: rgba(255,255,255,0.10);
-  border-bottom-color: rgba(0,0,0,0.22);
-  backdrop-filter: blur(10px) saturate(140%);
-  -webkit-backdrop-filter: blur(10px) saturate(140%);
+  border-bottom-color: rgba(0,0,0,0.20);
+  backdrop-filter: blur(14px) saturate(160%);
+  -webkit-backdrop-filter: blur(14px) saturate(160%);
   box-shadow:
-    0 1.5px 0 rgba(255,255,255,0.10) inset,
-    0 -1px 0 rgba(0,0,0,0.18) inset,
-    0 4px 14px rgba(0,0,0,0.18);
+    0 2px 0 rgba(255,255,255,0.10) inset,
+    0 -1px 0 rgba(0,0,0,0.16) inset,
+    0 0 0 0.5px rgba(255,255,255,0.08),
+    0 4px 16px rgba(0,0,0,0.16);
   color: #fff;
 }
 
-/* ── Frosted glass: Subscription select/learn buttons ── */
+/* ── Subscription toggle track ── */
+.sub-toggle {
+  background: rgba(0,0,0,0.04);
+  border: 1px solid rgba(0,0,0,0.06);
+}
+
+/* ── Glass pill: Monthly / Annual active ── */
+.sub-toggle-btn.active {
+  background: linear-gradient(180deg,
+    rgba(255,255,255,0.88) 0%,
+    rgba(255,255,255,0.68) 100%);
+  border: 1px solid rgba(255,255,255,0.90);
+  border-bottom-color: rgba(0,0,0,0.05);
+  backdrop-filter: blur(10px) saturate(180%) brightness(1.02);
+  -webkit-backdrop-filter: blur(10px) saturate(180%) brightness(1.02);
+  box-shadow:
+    0 1.5px 0 rgba(255,255,255,1.0) inset,
+    0 -0.5px 0 rgba(0,0,0,0.04) inset,
+    0 2px 10px rgba(0,0,0,0.08),
+    0 1px 3px rgba(0,0,0,0.05);
+  color: var(--text);
+}
+
+/* ── Ultra-clear frosted glass: subscription select / learn ── */
 .sub-select-btn,
 .sub-learn-btn {
   background: linear-gradient(180deg,
-    rgba(255,255,255,0.54) 0%,
-    rgba(255,255,255,0.28) 100%);
-  border: 1.5px solid rgba(255,255,255,0.62);
-  border-bottom-color: rgba(0,0,0,0.05);
-  backdrop-filter: blur(8px) saturate(160%);
-  -webkit-backdrop-filter: blur(8px) saturate(160%);
+    rgba(255,255,255,0.28) 0%,
+    rgba(255,255,255,0.12) 100%);
+  border: 1.5px solid rgba(255,255,255,0.64);
+  border-bottom-color: rgba(0,0,0,0.04);
+  backdrop-filter: blur(10px) saturate(180%);
+  -webkit-backdrop-filter: blur(10px) saturate(180%);
   box-shadow:
-    0 1px 0 rgba(255,255,255,0.82) inset,
-    0 -0.5px 0 rgba(0,0,0,0.04) inset,
-    0 3px 10px rgba(0,0,0,0.06);
+    0 1.5px 0 rgba(255,255,255,0.92) inset,
+    0 -0.5px 0 rgba(0,0,0,0.03) inset,
+    0 0 0 0.5px rgba(255,255,255,0.20),
+    0 2px 8px rgba(0,0,0,0.05);
   transition: background 0.18s, border-color 0.18s, box-shadow 0.18s;
 }
 .sub-select-btn:hover,
 .sub-learn-btn:hover {
   background: linear-gradient(180deg,
-    rgba(255,255,255,0.66) 0%,
-    rgba(255,255,255,0.42) 100%);
-  border-color: rgba(0,0,0,0.18);
+    rgba(255,255,255,0.42) 0%,
+    rgba(255,255,255,0.22) 100%);
+  border-color: rgba(0,0,0,0.14);
   box-shadow:
-    0 1px 0 rgba(255,255,255,0.88) inset,
-    0 3px 12px rgba(0,0,0,0.09);
+    0 1.5px 0 rgba(255,255,255,0.96) inset,
+    0 -0.5px 0 rgba(0,0,0,0.03) inset,
+    0 3px 12px rgba(0,0,0,0.07);
 }
-/* Active subscription card: dark glass */
+/* Active subscription card: dark liquid glass */
 .sub-card.active .sub-select-btn {
   background: linear-gradient(180deg,
-    rgba(14, 14, 14, 0.90) 0%,
-    rgba(6, 6, 6, 0.86) 100%);
-  border-color: rgba(255,255,255,0.12);
-  border-bottom-color: rgba(0,0,0,0.22);
-  backdrop-filter: blur(8px) saturate(140%);
-  -webkit-backdrop-filter: blur(8px) saturate(140%);
+    rgba(12, 12, 12, 0.88) 0%,
+    rgba(4, 4, 4, 0.82) 100%);
+  border-color: rgba(255,255,255,0.10);
+  border-bottom-color: rgba(0,0,0,0.18);
+  backdrop-filter: blur(10px) saturate(150%);
+  -webkit-backdrop-filter: blur(10px) saturate(150%);
   box-shadow:
-    0 1.5px 0 rgba(255,255,255,0.10) inset,
-    0 -1px 0 rgba(0,0,0,0.18) inset,
-    0 4px 14px rgba(0,0,0,0.15);
+    0 2px 0 rgba(255,255,255,0.10) inset,
+    0 -1px 0 rgba(0,0,0,0.14) inset,
+    0 0 0 0.5px rgba(255,255,255,0.06),
+    0 4px 14px rgba(0,0,0,0.13);
   color: #fff;
-}
-
-/* ── Glass toggle: Monthly / Annual ── */
-.sub-toggle-btn.active {
-  background: linear-gradient(180deg,
-    rgba(255,255,255,0.94) 0%,
-    rgba(255,255,255,0.76) 100%);
-  border: 1px solid rgba(255,255,255,0.90);
-  border-bottom-color: rgba(0,0,0,0.06);
-  backdrop-filter: blur(8px) saturate(150%);
-  -webkit-backdrop-filter: blur(8px) saturate(150%);
-  box-shadow:
-    0 1px 0 rgba(255,255,255,1.0) inset,
-    0 2px 8px rgba(0,0,0,0.10),
-    0 1px 3px rgba(0,0,0,0.06);
-  color: var(--text);
 }
 
 
