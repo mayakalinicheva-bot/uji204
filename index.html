@@ -2022,7 +2022,7 @@ function renderCart() {
   var html = '';
   for (var i = 0; i < cart.length; i++) {
     var item = cart[i];
-    var imgId = (item.id.indexOf('ion-sub') >= 0) ? 'ion' : item.id;
+    var imgId = item.id.split('-sub-')[0];
     var imgEl = document.querySelector('#' + imgId + ' .product-image img');
     var src = imgEl ? imgEl.src : '';
     var details = '';
