@@ -237,7 +237,7 @@ header {
   min-height: 100svh; background: var(--bg);
   display: flex; flex-direction: column;
   align-items: center; justify-content: flex-start;
-  padding-top: 80px; padding-bottom: 60px;
+  padding-top: 72px; padding-bottom: 48px;
   text-align: center;
 }
 .product-name {
@@ -274,9 +274,11 @@ header {
   -webkit-font-smoothing: antialiased;
 }
 .btn-learn:hover { background: #0a0a0a; color: #fff; border-color: #0a0a0a; }
+/* desktop default: bottle at full natural width, no zoom */
 .product-image {
   width: min(96vw, 1000px);
-  margin: 36px auto 0;
+  margin: 16px auto 0;
+  overflow: hidden;
 }
 .product-image img {
   display: block;
@@ -565,11 +567,14 @@ footer p { font-size: 12px; color: var(--text-muted); }
   .btn-buy, .btn-learn { width: 100%; justify-content: center; height: 44px; }
   .product-image {
     width: 96vw;
-    margin: 64px auto 0;
+    margin: 36px auto 0;
+    overflow: hidden;
   }
+  /* zoom 170% to fill transparent PNG padding and make bottle dominant */
   .product-image img {
     display: block;
-    width: 100%;
+    width: 170%;
+    margin-left: -35%;
     height: auto;
   }
 
@@ -898,14 +903,17 @@ footer p { font-size: 12px; color: var(--text-muted); }
 /* ── TABLET: product section spacing fix ── */
 @media (min-width: 768px) and (max-width: 1024px) {
   .product-section {
-    padding-top: 80px;
+    padding-top: 72px;
   }
   .product-image {
     width: min(94vw, 820px);
-    margin: 52px auto 0;
+    margin: 20px auto 0;
+    overflow: hidden;
   }
+  /* zoom 130% on tablet — moderately tighter transparent padding */
   .product-image img {
-    width: 100%;
+    width: 130%;
+    margin-left: -15%;
     height: auto;
   }
 }
@@ -971,10 +979,13 @@ footer p { font-size: 12px; color: var(--text-muted); }
 @media (min-width: 1025px) {
   .product-image {
     width: min(96vw, 1000px);
-    margin: 36px auto 0;
+    margin: 16px auto 0;
+    overflow: hidden;
   }
+  /* zoom 115% on desktop — subtle tighten of transparent frame */
   .product-image img {
-    width: 100%;
+    width: 115%;
+    margin-left: -7.5%;
     height: auto;
   }
 }
