@@ -1254,12 +1254,12 @@ footer p { font-size: 12px; color: var(--text-muted); }
       <span class="explore-item-tag">Clean Hydration</span>
       <span class="explore-arrow">↗</span>
     </a>
-    <a href="#neu" class="explore-item" onclick="closeExplore(); goToProduct('neu');">
+    <a href="#" class="explore-item" onclick="closeExplore(); switchPage('card-neu'); return false;">
       <span class="explore-item-name">NEU°</span>
       <span class="explore-item-tag">Calm Clarity</span>
       <span class="explore-arrow">↗</span>
     </a>
-    <a href="#nox" class="explore-item" onclick="closeExplore(); goToProduct('nox');">
+    <a href="#" class="explore-item" onclick="closeExplore(); switchPage('card-nox'); return false;">
       <span class="explore-item-name">NOX°</span>
       <span class="explore-item-tag">Deep Focus</span>
       <span class="explore-arrow">↗</span>
@@ -1324,14 +1324,14 @@ footer p { font-size: 12px; color: var(--text-muted); }
           </div>
           <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
         </div>
-        <div class="mobile-explore-item disabled">
+        <div class="mobile-explore-item" onclick="closeMobileDropdown(); switchPage('card-neu')">
           <div>
             <div class="mobile-explore-name">NEU°</div>
             <div class="mobile-explore-tag">Calm Clarity</div>
           </div>
           <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
         </div>
-        <div class="mobile-explore-item disabled">
+        <div class="mobile-explore-item" onclick="closeMobileDropdown(); switchPage('card-nox')">
           <div>
             <div class="mobile-explore-name">NOX°</div>
             <div class="mobile-explore-tag">Deep Focus</div>
@@ -2186,7 +2186,7 @@ function goToProduct(id) {
     requestAnimationFrame(function() {
       var el = document.getElementById(id);
       if (!el) return;
-      window.scrollTo({ top: el.offsetTop, behavior: 'instant' });
+      window.scrollTo({ top: Math.max(0, el.offsetTop - 16), behavior: 'smooth' });
     });
   });
 }
