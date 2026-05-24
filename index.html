@@ -273,7 +273,7 @@ header {
   -webkit-appearance: none; appearance: none;
   -webkit-font-smoothing: antialiased;
 }
-.btn-learn:hover { background: #0a0a0a; color: #fff; border-color: #0a0a0a; }
+.btn-learn:hover { opacity: 0.82; }
 /* desktop default: bottle at full natural width, no zoom */
 .product-image {
   width: min(96vw, 1000px);
@@ -945,19 +945,9 @@ footer p { font-size: 12px; color: var(--text-muted); }
     0 2px 10px rgba(0,0,0,0.10),
     0 1px 3px rgba(0,0,0,0.06);
   color: rgba(10,10,10,0.92);
-  transition: background 0.20s ease, border-color 0.20s ease, box-shadow 0.20s ease, color 0.20s ease;
+  transition: opacity 0.20s ease, background 0.20s ease, border-color 0.20s ease, box-shadow 0.20s ease;
 }
-.btn-learn:hover {
-  background: rgba(255,255,255,0.30);
-  border-top-color: rgba(255,255,255,0.82);
-  box-shadow:
-    0 1px 0 rgba(255,255,255,0.66) inset,
-    0 -1px 0 rgba(0,0,0,0.05) inset,
-    0 0 0 0.5px rgba(255,255,255,0.26),
-    0 4px 14px rgba(0,0,0,0.12),
-    0 1px 4px rgba(0,0,0,0.07);
-  color: rgba(10,10,10,0.96);
-}
+.btn-learn:hover { opacity: 0.82; }
 
 /* ── SEGMENTED CONTROL: sliding glass pill ── */
 .sub-toggle {
@@ -1019,18 +1009,11 @@ footer p { font-size: 12px; color: var(--text-muted); }
     0 0 0 0.5px rgba(255,255,255,0.38),
     0 2px 8px rgba(0,0,0,0.08),
     0 1px 3px rgba(0,0,0,0.05);
-  transition: background 0.20s ease, border-color 0.20s ease, box-shadow 0.20s ease;
+  transition: opacity 0.20s ease, background 0.20s ease, border-color 0.20s ease, box-shadow 0.20s ease;
 }
 .sub-select-btn:hover,
 .sub-learn-btn:hover {
-  background: rgba(255,255,255,0.72);
-  border-top-color: rgba(255,255,255,0.96);
-  box-shadow:
-    0 1px 0 rgba(255,255,255,0.90) inset,
-    0 -1px 0 rgba(0,0,0,0.04) inset,
-    0 0 0 0.5px rgba(255,255,255,0.46),
-    0 3px 12px rgba(0,0,0,0.10),
-    0 1px 4px rgba(0,0,0,0.06);
+  opacity: 0.82;
 }
 /* Active subscription card: dense dark glass */
 .sub-card.active .sub-select-btn {
@@ -1298,23 +1281,37 @@ footer p { font-size: 12px; color: var(--text-muted); }
 ═══════════════════════════════════════════════════════════ */
 #page-about { background: var(--bg); overflow-x: hidden; }
 
-.about-back {
-  position: fixed; top: 16px; left: 50%; transform: translateX(-50%);
-  z-index: 1000; display: flex; align-items: center; gap: 7px;
-  font-size: 13px; font-weight: 500; color: var(--text);
-  cursor: pointer; border: none; outline: none;
-  background: linear-gradient(180deg, rgba(255,255,255,0.88) 0%, rgba(255,255,255,0.72) 100%);
-  border: 1px solid rgba(255,255,255,0.86);
-  border-bottom-color: rgba(0,0,0,0.06);
-  backdrop-filter: blur(14px) saturate(200%) brightness(1.02);
-  -webkit-backdrop-filter: blur(14px) saturate(200%) brightness(1.02);
-  padding: 9px 18px 9px 14px;
+/* ── ABOUT FLOATING ISLAND — detaches from navbar when entering About ── */
+.nav-island-about {
+  display: inline-flex; align-items: center; gap: 7px;
+  height: 44px;
+  padding: 0 18px 0 14px;
   border-radius: 999px;
-  box-shadow: 0 1.5px 0 rgba(255,255,255,1.0) inset, 0 -0.5px 0 rgba(0,0,0,0.04) inset, 0 2px 12px rgba(0,0,0,0.07);
-  transition: opacity 0.2s;
+  background: linear-gradient(180deg, rgba(255,255,255,0.42) 0%, rgba(255,255,255,0.22) 100%);
+  backdrop-filter: blur(12px) saturate(220%) brightness(1.01);
+  -webkit-backdrop-filter: blur(12px) saturate(220%) brightness(1.01);
+  border: 1px solid rgba(255,255,255,0.78);
+  border-bottom-color: rgba(255,255,255,0.28);
+  box-shadow:
+    0 1.5px 0 rgba(255,255,255,1.0) inset,
+    0 -1px 0 rgba(0,0,0,0.04) inset,
+    0 0 0 0.5px rgba(0,0,0,0.05),
+    0 8px 24px rgba(0,0,0,0.08),
+    0 2px 6px rgba(0,0,0,0.04);
+  position: fixed; top: 12px; right: 20px; z-index: 200;
+  font-family: var(--font); font-size: 13px; font-weight: 500; color: var(--text);
+  cursor: pointer; outline: none; -webkit-appearance: none; appearance: none;
+  /* Initial: hidden, offset toward navbar (slides out rightward on enter) */
+  opacity: 0; pointer-events: none;
+  transform: translateX(-20px) scale(0.95);
+  transition: opacity 0.36s cubic-bezier(0.34,1.06,0.64,1), transform 0.36s cubic-bezier(0.34,1.06,0.64,1);
 }
-.about-back:hover { opacity: 0.72; }
-.about-back svg { width: 14px; height: 14px; stroke: var(--text); fill: none; stroke-width: 2; }
+.nav-island-about.visible {
+  opacity: 1; pointer-events: auto;
+  transform: none;
+}
+.nav-island-about:hover { opacity: 0.72; }
+.nav-island-about svg { width: 14px; height: 14px; stroke: var(--text); fill: none; stroke-width: 2; flex-shrink: 0; }
 
 /* ── Hero ── */
 .about-hero {
@@ -1573,12 +1570,21 @@ footer p { font-size: 12px; color: var(--text-muted); }
   .about-plan { padding: 28px 22px; }
   .about-hero-rings { display: none; }
   .about-protocol-row { flex-wrap: wrap; }
+  .nav-island-about {
+    top: 68px; right: auto;
+    left: 50%;
+    transform: translateX(-50%) translateY(-10px) scale(0.96);
+  }
+  .nav-island-about.visible {
+    transform: translateX(-50%) translateY(0) scale(1);
+  }
 }
 @media (min-width: 768px) and (max-width: 1024px) {
   .about-hero { padding: 120px 40px 72px; }
   .about-modules { padding: 16px 16px 100px; }
   .about-module { padding: 40px; }
   .about-plan { padding: 36px; }
+  .nav-island-about { right: 16px; }
 }
 
 </style>
@@ -1657,6 +1663,12 @@ footer p { font-size: 12px; color: var(--text-muted); }
     </div>
   </div>
 </header>
+
+<!-- ABOUT FLOATING ISLAND — slides in from nav when entering About -->
+<button class="nav-island-about" id="navIslandAbout" onclick="goToHome()">
+  <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+  All products
+</button>
 
 <!-- MOBILE DROPDOWN -->
 <div class="mobile-dropdown" id="mobileDropdown">
@@ -2439,11 +2451,6 @@ footer p { font-size: 12px; color: var(--text-muted); }
 </div><!-- end page-card-nox -->
 <div id="page-about" class="app-page" style="display:none">
 
-<button class="about-back" onclick="switchPage('home')">
-  <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
-  All products
-</button>
-
 <!-- HERO -->
 <section class="about-hero">
   <svg class="about-hero-rings" viewBox="0 0 680 680" xmlns="http://www.w3.org/2000/svg">
@@ -2621,7 +2628,7 @@ footer p { font-size: 12px; color: var(--text-muted); }
         <li>Weekly delivery</li>
         <li>Entry protocol</li>
       </ul>
-      <button class="about-plan-cta" onclick="switchPage('card')">Start Base ↗</button>
+      <button class="about-plan-cta" onclick="goToHome()">Choose your drink ↗</button>
       <span class="about-ghost">Base</span>
     </div>
 
@@ -2638,7 +2645,7 @@ footer p { font-size: 12px; color: var(--text-muted); }
         <li>EXTRA° — monthly accessories</li>
         <li>Priority dispatch &amp; handling</li>
       </ul>
-      <button class="about-plan-cta" onclick="switchPage('card')">Start Plus ↗</button>
+      <button class="about-plan-cta" onclick="goToHome()">Choose your drink ↗</button>
       <span class="about-ghost">+</span>
     </div>
 
@@ -2658,6 +2665,9 @@ function switchPage(name) {
   document.querySelectorAll('.app-page').forEach(function(p) { p.style.display = 'none'; });
   var target = document.getElementById('page-' + name);
   if (target) { target.style.display = 'block'; window.scrollTo(0, 0); }
+  // About floating island: show only on About page
+  var island = document.getElementById('navIslandAbout');
+  if (island) island.classList.toggle('visible', name === 'about');
   if (name === 'card') { window.cp = ''; window.cpProd = 'ion'; selections = {}; selectedPlan = null; subPeriod = { base: 'monthly', plus: 'monthly' }; }
   if (name === 'card-neu') { window.cp = 'n-'; window.cpProd = 'neu'; selections = {}; selectedPlan = null; subPeriod = { base: 'monthly', plus: 'monthly' }; }
   if (name === 'card-nox') { window.cp = 'x-'; window.cpProd = 'nox'; selections = {}; selectedPlan = null; subPeriod = { base: 'monthly', plus: 'monthly' }; }
@@ -2673,6 +2683,16 @@ function switchPage(name) {
     var hl = document.getElementById('headerIngredient');
     if (hl) hl.classList.remove('show');
   }
+}
+
+function goToHome() {
+  // Slide island out first, then switch page
+  var island = document.getElementById('navIslandAbout');
+  if (island) island.classList.remove('visible');
+  setTimeout(function() {
+    switchPage('home');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, 220);
 }
 
 
