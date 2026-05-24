@@ -2699,6 +2699,11 @@ function switchPage(name) {
   var island = document.getElementById('navIslandAbout');
   if (island) {
     if (name === 'about') {
+      // Clear any inline overrides left by goToHome() before animating in
+      island.style.transition = '';
+      island.style.opacity = '';
+      island.style.visibility = '';
+      island.style.pointerEvents = '';
       island.style.display = '';
       positionIsland();
       island.classList.add('visible');
@@ -2725,29 +2730,32 @@ function switchPage(name) {
 
 function goToHome() {
   var island = document.getElementById('navIslandAbout');
-  if (!island) { switchPage('home'); return; }
 
-  // Instant opacity fade — no transform drift, no delay
-  island.style.pointerEvents = 'none';
-  island.style.transition = 'opacity 0.16s ease';
-  island.style.opacity = '0';
-
-  // Switch page on next frame — island is visually gone immediately
-  requestAnimationFrame(function() {
-    switchPage('home');
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  });
-
-  // Hard cleanup after fade completes
-  setTimeout(function() {
+  if (island) {
+    // Synchronous kill — ALL of these happen before any routing
+    // Disabling transitions first prevents any CSS animation from firing
+    island.style.transition = 'none';
+    island.style.opacity = '0';
+    island.style.visibility = 'hidden';
+    island.style.pointerEvents = 'none';
+    island.classList.remove('visible');
     island.style.display = 'none';
-    requestAnimationFrame(function() {
-      island.style.display = '';
+  }
+
+  // Route NOW — homepage renders with island already dead
+  switchPage('home');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+
+  if (island) {
+    // Restore to CSS-controlled hidden state (no .visible = opacity:0 via CSS)
+    setTimeout(function() {
       island.style.transition = '';
       island.style.opacity = '';
+      island.style.visibility = '';
       island.style.pointerEvents = '';
-    });
-  }, 220);
+      island.style.display = '';
+    }, 100);
+  }
 }
 
 
