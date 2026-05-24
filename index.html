@@ -2674,13 +2674,36 @@ footer p { font-size: 12px; color: var(--text-muted); }
 window.cp = ''; // card prefix: '' for ION, 'n-' for NEU
 window.cpProd = 'ion'; // active product id
 
+function positionIsland() {
+  var island = document.getElementById('navIslandAbout');
+  var navPill = document.querySelector('.nav-island');
+  if (!island || !navPill || window.innerWidth <= 767) return;
+  var r = navPill.getBoundingClientRect();
+  var gap = 14;
+  var left = r.left - gap - island.offsetWidth;
+  island.style.left = Math.max(16, left) + 'px';
+}
+
+window.addEventListener('resize', function() {
+  var island = document.getElementById('navIslandAbout');
+  if (island && island.classList.contains('visible')) positionIsland();
+});
+
 function switchPage(name) {
   document.querySelectorAll('.app-page').forEach(function(p) { p.style.display = 'none'; });
   var target = document.getElementById('page-' + name);
   if (target) { target.style.display = 'block'; window.scrollTo(0, 0); }
   // About floating island: show only on About page
   var island = document.getElementById('navIslandAbout');
-  if (island) island.classList.toggle('visible', name === 'about');
+  if (island) {
+    if (name === 'about') {
+      island.style.display = '';
+      positionIsland();
+      island.classList.add('visible');
+    } else {
+      island.classList.remove('visible');
+    }
+  }
   if (name === 'card') { window.cp = ''; window.cpProd = 'ion'; selections = {}; selectedPlan = null; subPeriod = { base: 'monthly', plus: 'monthly' }; }
   if (name === 'card-neu') { window.cp = 'n-'; window.cpProd = 'neu'; selections = {}; selectedPlan = null; subPeriod = { base: 'monthly', plus: 'monthly' }; }
   if (name === 'card-nox') { window.cp = 'x-'; window.cpProd = 'nox'; selections = {}; selectedPlan = null; subPeriod = { base: 'monthly', plus: 'monthly' }; }
@@ -2702,30 +2725,18 @@ function goToHome() {
   var island = document.getElementById('navIslandAbout');
   if (!island) { switchPage('home'); return; }
 
+  island.style.pointerEvents = 'none';
   island.classList.remove('visible');
 
-  var fired = false;
-  function proceed() {
-    if (fired) return;
-    fired = true;
-    island.removeEventListener('transitionend', proceed);
-    // Hard-reset visibility so no ghost state survives on any browser/Safari
-    island.style.opacity = '0';
-    island.style.pointerEvents = 'none';
-    island.style.transform = '';
+  setTimeout(function() {
+    island.style.display = 'none';
     switchPage('home');
-    // Defer the style reset so switchPage's own classList.toggle runs first
-    requestAnimationFrame(function() {
-      island.style.opacity = '';
-      island.style.pointerEvents = '';
-      island.style.transform = '';
-    });
     window.scrollTo({ top: 0, behavior: 'smooth' });
-  }
-
-  island.addEventListener('transitionend', proceed, { once: true });
-  // Safari fallback: if transitionend never fires within 400ms, proceed anyway
-  setTimeout(proceed, 400);
+    requestAnimationFrame(function() {
+      island.style.display = '';
+      island.style.pointerEvents = '';
+    });
+  }, 380);
 }
 
 
