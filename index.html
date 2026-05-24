@@ -1282,7 +1282,7 @@ footer p { font-size: 12px; color: var(--text-muted); }
 ═══════════════════════════════════════════════════════════ */
 #page-about { background: var(--bg); overflow-x: hidden; }
 
-/* ── ABOUT FLOATING ISLAND — detaches from navbar when entering About ── */
+/* ── ABOUT FLOATING ISLAND — independent detached sibling to navbar ── */
 .nav-island-about {
   display: inline-flex; align-items: center; gap: 7px;
   height: 44px;
@@ -1299,13 +1299,14 @@ footer p { font-size: 12px; color: var(--text-muted); }
     0 0 0 0.5px rgba(0,0,0,0.06),
     0 8px 32px rgba(0,0,0,0.12),
     0 2px 8px rgba(0,0,0,0.06);
-  position: fixed; top: 12px; right: 20px; z-index: 200;
+  /* LEFT side — navbar stays centered, island is an independent spatial layer */
+  position: fixed; top: 12px; left: 20px; z-index: 201;
   font-family: var(--font); font-size: 13px; font-weight: 500; color: var(--text);
   cursor: pointer; outline: none; -webkit-appearance: none; appearance: none;
   will-change: transform, opacity;
-  /* Initial: hidden, slides in from navbar direction on About enter */
+  /* Hidden: offset right (toward navbar center) — slides left into position */
   opacity: 0; pointer-events: none;
-  transform: translateX(-20px) scale(0.95);
+  transform: translateX(20px) scale(0.95);
   transition: opacity 0.34s cubic-bezier(0.34,1.06,0.64,1), transform 0.34s cubic-bezier(0.34,1.06,0.64,1);
 }
 .nav-island-about.visible {
@@ -1314,6 +1315,7 @@ footer p { font-size: 12px; color: var(--text-muted); }
 }
 .nav-island-about:hover { opacity: 0.72; }
 .nav-island-about svg { width: 14px; height: 14px; stroke: var(--text); fill: none; stroke-width: 2; flex-shrink: 0; }
+.nav-island-about .island-label { white-space: nowrap; }
 
 /* ── Hero ── */
 .about-hero {
@@ -1573,21 +1575,29 @@ footer p { font-size: 12px; color: var(--text-muted); }
   .about-plan { padding: 28px 22px; }
   .about-hero-rings { display: none; }
   .about-protocol-row { flex-wrap: wrap; }
+  /* Mobile: compact circle — sits left of centered navbar, no text */
   .nav-island-about {
-    top: 68px; right: auto;
-    left: 50%;
-    transform: translateX(-50%) translateY(-10px) scale(0.96);
+    top: 10px;
+    left: 12px;
+    right: auto;
+    width: 44px;
+    height: 44px;
+    padding: 0;
+    gap: 0;
+    border-radius: 50%;
+    justify-content: center;
+    /* Hidden: offset right toward navbar center, slides left */
+    transform: translateX(12px) scale(0.92);
   }
-  .nav-island-about.visible {
-    transform: translateX(-50%) translateY(0) scale(1);
-  }
+  .nav-island-about .island-label { display: none; }
 }
 @media (min-width: 768px) and (max-width: 1024px) {
   .about-hero { padding: 120px 40px 72px; }
   .about-modules { padding: 16px 16px 100px; }
   .about-module { padding: 40px; }
   .about-plan { padding: 36px; }
-  .nav-island-about { right: 16px; }
+  /* Tablet: stays left side, slightly inset */
+  .nav-island-about { left: 16px; right: auto; }
 }
 
 </style>
@@ -1670,7 +1680,7 @@ footer p { font-size: 12px; color: var(--text-muted); }
 <!-- ABOUT FLOATING ISLAND — slides in from nav when entering About -->
 <button class="nav-island-about" id="navIslandAbout" onclick="goToHome()">
   <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
-  All products
+  <span class="island-label">All products</span>
 </button>
 
 <!-- MOBILE DROPDOWN -->
