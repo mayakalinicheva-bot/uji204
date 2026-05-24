@@ -945,9 +945,10 @@ footer p { font-size: 12px; color: var(--text-muted); }
     0 2px 10px rgba(0,0,0,0.10),
     0 1px 3px rgba(0,0,0,0.06);
   color: rgba(10,10,10,0.92);
-  transition: opacity 0.20s ease, background 0.20s ease, border-color 0.20s ease, box-shadow 0.20s ease;
+  transition: opacity 0.2s, transform 0.18s;
 }
 .btn-learn:hover { opacity: 0.82; }
+.btn-learn:active { transform: scale(0.97); }
 
 /* ── SEGMENTED CONTROL: sliding glass pill ── */
 .sub-toggle {
@@ -1547,6 +1548,7 @@ footer p { font-size: 12px; color: var(--text-muted); }
   line-height: 1; pointer-events: none; user-select: none;
 }
 .about-module .about-ghost { color: rgba(0,0,0,0.04); }
+.about-plan.base .about-ghost { color: rgba(0,0,0,0.04); }
 .about-plan.plus .about-ghost { color: rgba(255,255,255,0.04); }
 
 /* ── Scroll animations ── */
@@ -2642,7 +2644,7 @@ footer p { font-size: 12px; color: var(--text-muted); }
       <div class="about-plan-divider"></div>
       <ul class="about-plan-features">
         <li>Daily personalized formula</li>
-        <li>DRIP° — limited seasonal releases</li>
+        <li>DROP° — limited seasonal releases</li>
         <li>EXTRA° — monthly accessories</li>
         <li>Priority dispatch &amp; handling</li>
       </ul>
