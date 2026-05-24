@@ -49,19 +49,19 @@ header {
   border-radius: 999px;
   background: linear-gradient(
     180deg,
-    rgba(255, 255, 255, 0.42) 0%,
-    rgba(255, 255, 255, 0.22) 100%
+    rgba(255, 255, 255, 0.72) 0%,
+    rgba(255, 255, 255, 0.30) 100%
   );
-  backdrop-filter: blur(12px) saturate(220%) brightness(1.01);
-  -webkit-backdrop-filter: blur(12px) saturate(220%) brightness(1.01);
-  border: 1px solid rgba(255, 255, 255, 0.78);
-  border-bottom-color: rgba(255, 255, 255, 0.28);
+  backdrop-filter: blur(16px) saturate(180%) brightness(1.02);
+  -webkit-backdrop-filter: blur(16px) saturate(180%) brightness(1.02);
+  border: 1px solid rgba(255, 255, 255, 0.88);
+  border-bottom-color: rgba(0, 0, 0, 0.06);
   box-shadow:
     0 1.5px 0 rgba(255, 255, 255, 1.0) inset,
-    0 -1px 0 rgba(0, 0, 0, 0.04) inset,
-    0 0 0 0.5px rgba(0, 0, 0, 0.05),
-    0 8px 24px rgba(0, 0, 0, 0.08),
-    0 2px 6px rgba(0, 0, 0, 0.04);
+    0 -1px 0 rgba(0, 0, 0, 0.06) inset,
+    0 0 0 0.5px rgba(0, 0, 0, 0.06),
+    0 8px 32px rgba(0, 0, 0, 0.12),
+    0 2px 8px rgba(0, 0, 0, 0.06);
   pointer-events: auto;
   transition: box-shadow 0.3s ease;
 }
@@ -1287,24 +1287,25 @@ footer p { font-size: 12px; color: var(--text-muted); }
   height: 44px;
   padding: 0 18px 0 14px;
   border-radius: 999px;
-  background: linear-gradient(180deg, rgba(255,255,255,0.42) 0%, rgba(255,255,255,0.22) 100%);
-  backdrop-filter: blur(12px) saturate(220%) brightness(1.01);
-  -webkit-backdrop-filter: blur(12px) saturate(220%) brightness(1.01);
-  border: 1px solid rgba(255,255,255,0.78);
-  border-bottom-color: rgba(255,255,255,0.28);
+  background: linear-gradient(180deg, rgba(255,255,255,0.72) 0%, rgba(255,255,255,0.30) 100%);
+  backdrop-filter: blur(16px) saturate(180%) brightness(1.02);
+  -webkit-backdrop-filter: blur(16px) saturate(180%) brightness(1.02);
+  border: 1px solid rgba(255,255,255,0.88);
+  border-bottom-color: rgba(0,0,0,0.06);
   box-shadow:
     0 1.5px 0 rgba(255,255,255,1.0) inset,
-    0 -1px 0 rgba(0,0,0,0.04) inset,
-    0 0 0 0.5px rgba(0,0,0,0.05),
-    0 8px 24px rgba(0,0,0,0.08),
-    0 2px 6px rgba(0,0,0,0.04);
+    0 -1px 0 rgba(0,0,0,0.06) inset,
+    0 0 0 0.5px rgba(0,0,0,0.06),
+    0 8px 32px rgba(0,0,0,0.12),
+    0 2px 8px rgba(0,0,0,0.06);
   position: fixed; top: 12px; right: 20px; z-index: 200;
   font-family: var(--font); font-size: 13px; font-weight: 500; color: var(--text);
   cursor: pointer; outline: none; -webkit-appearance: none; appearance: none;
-  /* Initial: hidden, offset toward navbar (slides out rightward on enter) */
+  will-change: transform, opacity;
+  /* Initial: hidden, slides in from navbar direction on About enter */
   opacity: 0; pointer-events: none;
   transform: translateX(-20px) scale(0.95);
-  transition: opacity 0.36s cubic-bezier(0.34,1.06,0.64,1), transform 0.36s cubic-bezier(0.34,1.06,0.64,1);
+  transition: opacity 0.34s cubic-bezier(0.34,1.06,0.64,1), transform 0.34s cubic-bezier(0.34,1.06,0.64,1);
 }
 .nav-island-about.visible {
   opacity: 1; pointer-events: auto;
@@ -2686,13 +2687,33 @@ function switchPage(name) {
 }
 
 function goToHome() {
-  // Slide island out first, then switch page
   var island = document.getElementById('navIslandAbout');
-  if (island) island.classList.remove('visible');
-  setTimeout(function() {
+  if (!island) { switchPage('home'); return; }
+
+  island.classList.remove('visible');
+
+  var fired = false;
+  function proceed() {
+    if (fired) return;
+    fired = true;
+    island.removeEventListener('transitionend', proceed);
+    // Hard-reset visibility so no ghost state survives on any browser/Safari
+    island.style.opacity = '0';
+    island.style.pointerEvents = 'none';
+    island.style.transform = '';
     switchPage('home');
+    // Defer the style reset so switchPage's own classList.toggle runs first
+    requestAnimationFrame(function() {
+      island.style.opacity = '';
+      island.style.pointerEvents = '';
+      island.style.transform = '';
+    });
     window.scrollTo({ top: 0, behavior: 'smooth' });
-  }, 220);
+  }
+
+  island.addEventListener('transitionend', proceed, { once: true });
+  // Safari fallback: if transitionend never fires within 400ms, proceed anyway
+  setTimeout(proceed, 400);
 }
 
 
@@ -3083,14 +3104,9 @@ window.addEventListener('load', fitTaglines);
 window.addEventListener('resize', fitTaglines);
 
 
-// ── LEARN MORE → scroll to comparison ──
+// ── LEARN MORE → About section ──
 document.querySelectorAll('.btn-learn').forEach(function(btn) {
-  btn.addEventListener('click', function() {
-    var comp = document.getElementById('comparisonSection');
-    if (comp && comp.classList.contains('unlocked')) {
-      comp.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }
-  });
+  btn.addEventListener('click', function() { switchPage('about'); });
 });
 
 
@@ -3150,13 +3166,10 @@ function toggleMobileMenu() {
   toggleMobileDropdown();
 }
 
-// ── LEARN MORE → comparison table ──
+// ── LEARN MORE → About section (delegated, covers dynamically-rendered buttons) ──
 document.addEventListener('click', function(e) {
   if (e.target && e.target.classList.contains('btn-learn')) {
-    var comp = document.getElementById('comparisonSection');
-    if (comp && comp.classList.contains('unlocked')) {
-      comp.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }
+    switchPage('about');
   }
 });
 
