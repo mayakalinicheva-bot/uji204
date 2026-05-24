@@ -1600,6 +1600,162 @@ footer p { font-size: 12px; color: var(--text-muted); }
   .nav-island-about { left: 16px; right: auto; }
 }
 
+/* ══════════════════════════════════════
+   CHECKOUT SYSTEM
+══════════════════════════════════════ */
+
+#page-checkout { background: var(--bg); min-height: 100vh; padding-top: 80px; }
+
+.co-layout {
+  display: grid;
+  grid-template-columns: 1fr 360px;
+  gap: 40px;
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: 48px 24px 80px;
+  align-items: start;
+}
+
+.co-summary { position: sticky; top: 100px; }
+
+.co-section {
+  background: rgba(255,255,255,0.72);
+  backdrop-filter: blur(20px) saturate(160%);
+  -webkit-backdrop-filter: blur(20px) saturate(160%);
+  border: 1px solid rgba(255,255,255,0.90);
+  border-bottom-color: rgba(0,0,0,0.06);
+  box-shadow: 0 1.5px 0 rgba(255,255,255,0.90) inset, 0 4px 24px rgba(0,0,0,0.05);
+  border-radius: 22px;
+  padding: 32px;
+  margin-bottom: 12px;
+  transition: opacity 0.28s ease;
+}
+.co-section.co-locked { opacity: 0.44; pointer-events: none; }
+
+.co-section-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px; }
+.co-section-title { font-size: 15px; font-weight: 600; letter-spacing: -0.01em; }
+.co-section-edit { font-size: 13px; color: var(--green); cursor: pointer; font-weight: 500; background: none; border: none; font-family: var(--font); padding: 0; transition: opacity 0.2s; }
+.co-section-edit:hover { opacity: 0.72; }
+
+.co-completed-view { display: none; align-items: center; gap: 8px; color: var(--text-muted); font-size: 13px; }
+.co-completed-icon { color: var(--green); flex-shrink: 0; }
+
+.co-form { display: flex; flex-direction: column; gap: 14px; }
+.co-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.co-field { display: flex; flex-direction: column; gap: 6px; }
+.co-label { font-size: 11px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-muted); }
+
+.co-input {
+  height: 50px; padding: 0 16px;
+  border-radius: 12px;
+  border: 1px solid rgba(0,0,0,0.10);
+  background: rgba(255,255,255,0.80);
+  font-family: var(--font); font-size: 15px; color: var(--text);
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+  -webkit-appearance: none; appearance: none;
+}
+.co-input::placeholder { color: rgba(0,0,0,0.25); }
+.co-input:hover { border-color: rgba(0,0,0,0.18); }
+.co-input:focus { border-color: rgba(42,172,74,0.50); box-shadow: 0 0 0 3px rgba(42,172,74,0.10); background: #fff; }
+.co-input.co-valid { border-color: rgba(42,172,74,0.38); }
+
+.co-error-msg { font-size: 11px; color: rgb(200,40,40); display: none; margin-top: 2px; }
+.co-field.has-error .co-error-msg { display: block; }
+.co-field.has-error .co-input { border-color: rgba(220,50,50,0.55); box-shadow: 0 0 0 3px rgba(220,50,50,0.08); }
+
+.co-continue { margin-top: 6px; width: 100%; height: 52px; border-radius: var(--radius); font-family: var(--font); font-size: 15px; font-weight: 600; cursor: pointer; }
+
+.co-applepay {
+  width: 100%; height: 52px; border-radius: var(--radius);
+  background: #000; color: #fff; border: none;
+  font-family: -apple-system, var(--font); font-size: 15px; font-weight: 500;
+  cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px;
+  transition: opacity 0.2s; margin-bottom: 12px; letter-spacing: 0.01em;
+}
+.co-applepay:hover { opacity: 0.82; }
+.co-applepay:active { transform: scale(0.985); }
+.co-applepay svg { width: 20px; height: 20px; fill: #fff; flex-shrink: 0; }
+
+.co-or { display: flex; align-items: center; gap: 12px; color: var(--text-muted); font-size: 12px; margin: 2px 0 14px; }
+.co-or::before, .co-or::after { content: ''; flex: 1; height: 1px; background: rgba(0,0,0,0.08); }
+
+.co-card-row { display: grid; grid-template-columns: 1fr 92px 78px; gap: 14px; }
+
+.co-processing {
+  position: fixed; inset: 0; z-index: 500;
+  background: rgba(247,246,248,0.90);
+  backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 20px;
+  opacity: 0; pointer-events: none; transition: opacity 0.28s ease;
+}
+.co-processing.active { opacity: 1; pointer-events: auto; }
+.co-spinner {
+  width: 36px; height: 36px;
+  border: 2.5px solid rgba(0,0,0,0.10); border-top-color: var(--green);
+  border-radius: 50%; animation: co-spin 0.7s linear infinite;
+}
+@keyframes co-spin { to { transform: rotate(360deg); } }
+.co-processing-label { font-size: 15px; font-weight: 500; color: var(--text-muted); }
+
+.co-success {
+  position: fixed; inset: 0; z-index: 510;
+  background: var(--bg);
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  text-align: center; padding: 40px;
+  opacity: 0; pointer-events: none; transition: opacity 0.36s ease;
+}
+.co-success.active { opacity: 1; pointer-events: auto; }
+.co-success-check {
+  width: 64px; height: 64px; border-radius: 50%;
+  background: rgba(42,172,74,0.10);
+  display: flex; align-items: center; justify-content: center; margin-bottom: 28px;
+}
+.co-success-check svg { width: 28px; height: 28px; stroke: var(--green); fill: none; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
+.co-success-title { font-size: clamp(26px,4vw,36px); font-weight: 700; letter-spacing: -0.03em; margin-bottom: 12px; }
+.co-success-sub { font-size: 15px; color: var(--text-muted); max-width: 300px; line-height: 1.65; margin-bottom: 32px; }
+.co-success-ref { font-size: 12px; color: var(--text-muted); letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 6px; }
+.co-success-refval { font-size: 15px; font-weight: 600; margin-bottom: 36px; }
+
+.co-summary-card {
+  background: rgba(255,255,255,0.72);
+  backdrop-filter: blur(20px) saturate(160%);
+  -webkit-backdrop-filter: blur(20px) saturate(160%);
+  border: 1px solid rgba(255,255,255,0.90);
+  border-bottom-color: rgba(0,0,0,0.06);
+  box-shadow: 0 1.5px 0 rgba(255,255,255,0.90) inset, 0 4px 24px rgba(0,0,0,0.05);
+  border-radius: 22px; padding: 28px;
+}
+.co-summary-title { font-size: 11px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 20px; }
+.co-summary-items { display: flex; flex-direction: column; gap: 16px; margin-bottom: 22px; }
+.co-summary-item { display: flex; gap: 14px; align-items: flex-start; }
+.co-summary-item-img { width: 48px; height: 60px; object-fit: contain; flex-shrink: 0; }
+.co-summary-item-info { flex: 1; }
+.co-summary-item-name { font-size: 14px; font-weight: 600; margin-bottom: 3px; }
+.co-summary-item-meta { font-size: 12px; color: var(--text-muted); line-height: 1.5; }
+.co-summary-item-price { font-size: 14px; font-weight: 600; white-space: nowrap; }
+.co-summary-divider { height: 1px; background: rgba(0,0,0,0.07); margin: 16px 0; }
+.co-summary-row { display: flex; justify-content: space-between; font-size: 13px; color: var(--text-muted); margin-bottom: 8px; }
+.co-summary-total { display: flex; justify-content: space-between; align-items: center; padding-top: 2px; }
+.co-summary-total span { font-size: 15px; font-weight: 700; }
+
+.co-empty { text-align: center; padding: 100px 24px; }
+.co-empty-title { font-size: 24px; font-weight: 700; letter-spacing: -0.03em; margin-bottom: 10px; }
+.co-empty-sub { font-size: 15px; color: var(--text-muted); margin-bottom: 32px; }
+
+@media (max-width: 900px) {
+  .co-layout { grid-template-columns: 1fr; padding: 20px 16px 80px; gap: 0; }
+  .co-summary { position: static; order: -1; margin-bottom: 20px; }
+  .co-summary-card { padding: 20px; }
+  .co-row { grid-template-columns: 1fr; }
+  .co-card-row { grid-template-columns: 1fr; }
+}
+@media (max-width: 767px) {
+  #page-checkout { padding-top: 72px; }
+  .co-section { padding: 24px 20px; }
+  .co-layout { padding: 16px 12px 80px; }
+}
+
 </style>
 </head><body>
 <!-- ══ INTRO OVERLAY ══ -->
@@ -1774,7 +1930,7 @@ footer p { font-size: 12px; color: var(--text-muted); }
       <span>Total</span>
       <strong id="cartTotal">€0</strong>
     </div>
-    <button class="checkout-btn">Checkout</button>
+    <button class="checkout-btn" id="cartCheckoutBtn" onclick="goToCheckout()">Checkout</button>
   </div>
 </div>
 
@@ -2667,6 +2823,162 @@ footer p { font-size: 12px; color: var(--text-muted); }
 </div><!-- end about-modules -->
 </div><!-- end page-about -->
 
+
+<div id="page-checkout" class="app-page" style="display:none">
+
+<!-- Processing overlay -->
+<div class="co-processing" id="coProcessing">
+  <div class="co-spinner"></div>
+  <div class="co-processing-label">Processing…</div>
+</div>
+
+<!-- Success screen -->
+<div class="co-success" id="coSuccess">
+  <div class="co-success-check">
+    <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+  </div>
+  <div class="co-success-title">Protocol confirmed.</div>
+  <div class="co-success-sub">Your formula is on its way. Manage and track your orders in Account.</div>
+  <div class="co-success-ref">Order reference</div>
+  <div class="co-success-refval" id="coOrderRef">—</div>
+  <button class="checkout-btn" style="max-width:260px" onclick="coFinish()">Back to home</button>
+</div>
+
+<!-- Empty state -->
+<div id="coEmptyState" style="display:none">
+  <div class="co-empty">
+    <div class="co-empty-title">Nothing here yet.</div>
+    <div class="co-empty-sub">Add a drink to start your protocol.</div>
+    <button class="checkout-btn" style="max-width:260px;margin:0 auto;display:block" onclick="switchPage('home')">Choose your drink</button>
+  </div>
+</div>
+
+<!-- Main layout -->
+<div class="co-layout" id="coLayout">
+
+  <!-- LEFT: progressive form steps -->
+  <div class="co-main">
+
+    <!-- Step 1: Contact -->
+    <div class="co-section" id="coStep1">
+      <div class="co-section-head">
+        <div class="co-section-title">Contact</div>
+        <button class="co-section-edit" onclick="coEditStep(1)" id="coEdit1" style="display:none">Edit</button>
+      </div>
+      <div class="co-completed-view" id="coCompleted1">
+        <svg class="co-completed-icon" viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+        <span id="coSummaryContact">—</span>
+      </div>
+      <div class="co-form" id="coForm1">
+        <div class="co-row">
+          <div class="co-field" id="coField-firstName">
+            <label class="co-label">First name</label>
+            <input class="co-input" id="coFirstName" type="text" placeholder="Maya" autocomplete="given-name">
+            <span class="co-error-msg">Required</span>
+          </div>
+          <div class="co-field" id="coField-lastName">
+            <label class="co-label">Last name</label>
+            <input class="co-input" id="coLastName" type="text" placeholder="K." autocomplete="family-name">
+            <span class="co-error-msg">Required</span>
+          </div>
+        </div>
+        <div class="co-field" id="coField-email">
+          <label class="co-label">Email</label>
+          <input class="co-input" id="coEmail" type="email" placeholder="you@domain.com" autocomplete="email">
+          <span class="co-error-msg">Valid email required</span>
+        </div>
+        <button class="co-continue checkout-btn" onclick="coContinue(1)">Continue</button>
+      </div>
+    </div>
+
+    <!-- Step 2: Delivery -->
+    <div class="co-section co-locked" id="coStep2">
+      <div class="co-section-head">
+        <div class="co-section-title">Delivery</div>
+        <button class="co-section-edit" onclick="coEditStep(2)" id="coEdit2" style="display:none">Edit</button>
+      </div>
+      <div class="co-completed-view" id="coCompleted2">
+        <svg class="co-completed-icon" viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+        <span id="coSummaryDelivery">—</span>
+      </div>
+      <div class="co-form" id="coForm2">
+        <div class="co-field" id="coField-address">
+          <label class="co-label">Address</label>
+          <input class="co-input" id="coAddress" type="text" placeholder="123 Street" autocomplete="street-address">
+          <span class="co-error-msg">Required</span>
+        </div>
+        <div class="co-row">
+          <div class="co-field" id="coField-city">
+            <label class="co-label">City</label>
+            <input class="co-input" id="coCity" type="text" placeholder="Kyoto" autocomplete="address-level2">
+            <span class="co-error-msg">Required</span>
+          </div>
+          <div class="co-field" id="coField-zip">
+            <label class="co-label">Postal code</label>
+            <input class="co-input" id="coZip" type="text" placeholder="00100" autocomplete="postal-code">
+            <span class="co-error-msg">Required</span>
+          </div>
+        </div>
+        <div class="co-field" id="coField-country">
+          <label class="co-label">Country</label>
+          <input class="co-input" id="coCountry" type="text" placeholder="Italy" autocomplete="country-name">
+          <span class="co-error-msg">Required</span>
+        </div>
+        <button class="co-continue checkout-btn" onclick="coContinue(2)">Continue</button>
+      </div>
+    </div>
+
+    <!-- Step 3: Payment -->
+    <div class="co-section co-locked" id="coStep3">
+      <div class="co-section-head">
+        <div class="co-section-title">Payment</div>
+      </div>
+      <div class="co-form" id="coForm3">
+        <button class="co-applepay" onclick="coApplePay()">
+          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg>
+          Pay
+        </button>
+        <div class="co-or">or pay with card</div>
+        <div class="co-field" id="coField-card">
+          <label class="co-label">Card number</label>
+          <input class="co-input" id="coCardNum" type="text" placeholder="1234 5678 9012 3456" maxlength="19" inputmode="numeric">
+          <span class="co-error-msg">Enter a valid 16-digit number</span>
+        </div>
+        <div class="co-card-row">
+          <div class="co-field" id="coField-expiry">
+            <label class="co-label">Expiry</label>
+            <input class="co-input" id="coExpiry" type="text" placeholder="MM/YY" maxlength="5" inputmode="numeric">
+            <span class="co-error-msg">MM/YY required</span>
+          </div>
+          <div class="co-field" id="coField-cvv">
+            <label class="co-label">CVV</label>
+            <input class="co-input" id="coCvv" type="text" placeholder="123" maxlength="3" inputmode="numeric">
+            <span class="co-error-msg">3 digits</span>
+          </div>
+        </div>
+        <button class="co-continue checkout-btn" onclick="coPayCard()">Pay now</button>
+      </div>
+    </div>
+
+  </div><!-- end co-main -->
+
+  <!-- RIGHT: sticky order summary -->
+  <div class="co-summary">
+    <div class="co-summary-card">
+      <div class="co-summary-title">Your formula</div>
+      <div class="co-summary-items" id="coSummaryItems"></div>
+      <div class="co-summary-divider"></div>
+      <div class="co-summary-row"><span>Delivery</span><span>Free</span></div>
+      <div class="co-summary-divider"></div>
+      <div class="co-summary-total">
+        <span>Total</span>
+        <span id="coSummaryTotal">€0</span>
+      </div>
+    </div>
+  </div>
+
+</div><!-- end co-layout -->
+</div><!-- end page-checkout -->
 
 
 <script>
