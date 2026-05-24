@@ -237,19 +237,19 @@ header {
   min-height: 88svh; background: var(--bg);
   display: flex; flex-direction: column;
   align-items: center; justify-content: flex-start;
-  padding-top: 80px; padding-bottom: 24px;
+  padding-top: 72px; padding-bottom: 20px;
   text-align: center;
 }
 .product-name {
-  font-size: clamp(38px, 5.5vw, 72px); font-weight: 700;
-  letter-spacing: -0.03em; line-height: 1; color: var(--text);
+  font-size: clamp(38px, 5.5vw, 72px); font-weight: 800;
+  letter-spacing: -0.04em; line-height: 1; color: var(--text);
   display: block; -webkit-font-smoothing: antialiased;
 }
 .product-tagline {
   font-size: clamp(13px, 1.2vw, 16px); font-weight: 300;
-  color: rgba(10,10,10,0.44); display: block;
-  margin-top: clamp(8px, 1.0vw, 14px); margin-bottom: clamp(14px, 1.6vw, 24px);
-  letter-spacing: 0.02em;
+  color: rgba(10,10,10,0.48); display: block;
+  margin-top: clamp(6px, 0.8vw, 10px); margin-bottom: clamp(6px, 0.8vw, 10px);
+  letter-spacing: 0.01em;
 }
 .btn-group { display: flex; gap: 10px; margin-bottom: 0; justify-content: center; }
 .btn-buy {
@@ -274,10 +274,10 @@ header {
   -webkit-font-smoothing: antialiased;
 }
 .btn-learn:hover { background: #0a0a0a; color: #fff; border-color: #0a0a0a; }
-/* desktop default: bottle with breathing room above */
+/* desktop default: bottle at full natural width, no zoom */
 .product-image {
   width: min(96vw, 1000px);
-  margin: 24px auto 0;
+  margin: 16px auto 0;
   overflow: hidden;
 }
 .product-image img {
@@ -566,9 +566,9 @@ footer p { font-size: 12px; color: var(--text-muted); }
   .burger-btn.open span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
 
   .product-section {
-    min-height: 100svh;
-    padding-top: 82px;
-    padding-bottom: 24px;
+    min-height: 88svh;
+    padding-top: 72px;
+    padding-bottom: 20px;
     padding-left: 0;
     padding-right: 0;
   }
@@ -579,8 +579,8 @@ footer p { font-size: 12px; color: var(--text-muted); }
   .product-tagline {
     padding: 0 16px;
     white-space: normal;
-    margin-top: 6px;
-    margin-bottom: 16px;
+    margin-top: 4px;
+    margin-bottom: 4px;
   }
   .btn-group {
     padding: 0 16px;
@@ -592,15 +592,15 @@ footer p { font-size: 12px; color: var(--text-muted); }
   .btn-buy, .btn-learn { width: 100%; justify-content: center; height: 44px; }
   .product-image {
     width: 96vw;
-    margin: 20px auto 0;
+    margin: 12px auto 0;
     overflow: hidden;
   }
-  /* zoom 170% — optical left shift ~1.5% to compensate mirror weight */
+  /* zoom 170% to fill transparent PNG padding and make bottle dominant */
   .product-image img {
     display: block;
     width: 170%;
-    margin-left: -36.5%;
-    margin-top: -8%;
+    margin-left: -35%;
+    margin-top: -8%; /* clip transparent PNG top-padding to pull bottle up */
     height: auto;
   }
 
@@ -813,10 +813,10 @@ footer p { font-size: 12px; color: var(--text-muted); }
   opacity: 0.3;
 }
 
-/* Text block — centered, raised slightly for optical balance */
+/* Text block — raised above optical center of composition */
 .intro-text {
   position: absolute;
-  top: 44%;
+  top: 40%;
   left: 50%;
   transform: translate(-50%, -50%);
   z-index: 2;
@@ -834,29 +834,31 @@ footer p { font-size: 12px; color: var(--text-muted); }
 
 .intro-headline {
   font-family: 'DM Sans', -apple-system, 'Helvetica Neue', sans-serif;
-  font-size: clamp(26px, 4.2vw, 52px);
-  font-weight: 600;
+  font-size: clamp(28px, 4.5vw, 56px);
+  font-weight: 700;
   color: #fff;
-  line-height: 1.14;
-  letter-spacing: -0.01em;
-  margin-bottom: clamp(18px, 2.8vw, 32px);
+  line-height: 1.1;
+  letter-spacing: -0.015em;
+  margin-bottom: clamp(16px, 2.4vw, 28px);
   -webkit-font-smoothing: antialiased;
+  text-shadow: 0 1px 24px rgba(0,0,0,0.32);
 }
 
 .intro-subline {
   font-family: 'DM Sans', -apple-system, 'Helvetica Neue', sans-serif;
-  font-size: clamp(14px, 1.6vw, 18px);
-  font-weight: 300;
-  color: rgba(255,255,255,0.70);
-  line-height: 1.68;
-  letter-spacing: 0.02em;
+  font-size: clamp(14px, 1.7vw, 19px);
+  font-weight: 400;
+  color: rgba(255,255,255,0.82);
+  line-height: 1.62;
+  letter-spacing: 0.01em;
   -webkit-font-smoothing: antialiased;
+  text-shadow: 0 1px 14px rgba(0,0,0,0.28);
 }
 
-/* CTA button — bottom center, lifted for breathing room */
+/* CTA button — floated above bottom, clear visual weight */
 .intro-cta {
   position: absolute;
-  bottom: clamp(48px, 7vh, 88px);
+  bottom: clamp(44px, 6.5vh, 80px);
   left: 50%;
   transform: translateX(-50%);
   z-index: 2;
@@ -872,7 +874,7 @@ footer p { font-size: 12px; color: var(--text-muted); }
   background: var(--green);
   border: none;
   border-radius: 999px;
-  padding: 16px 52px;
+  padding: 16px 48px;
   cursor: pointer;
   white-space: nowrap;
   -webkit-tap-highlight-color: transparent;
@@ -1048,6 +1050,28 @@ footer p { font-size: 12px; color: var(--text-muted); }
 
 
 
+/* ── Intro CTA: stronger edge definition against video background ── */
+.intro-cta button {
+  border: 1px solid rgba(255,255,255,0.82) !important;
+  border-bottom-color: rgba(0,0,0,0.10) !important;
+  box-shadow:
+    0 2.5px 0 rgba(255,255,255,0.76) inset,
+    0 -0.5px 0 rgba(0,0,0,0.08) inset,
+    inset 0 0 10px rgba(255,255,255,0.14),
+    0 0 0 0.5px rgba(255,255,255,0.44),
+    0 4px 28px rgba(61,186,95,0.52),
+    0 1px 8px rgba(0,0,0,0.22) !important;
+}
+.intro-cta button:hover {
+  box-shadow:
+    0 3px 0 rgba(255,255,255,0.84) inset,
+    0 -0.5px 0 rgba(0,0,0,0.08) inset,
+    inset 0 0 12px rgba(255,255,255,0.18),
+    0 0 0 0.5px rgba(255,255,255,0.52),
+    0 6px 36px rgba(61,186,95,0.62),
+    0 2px 12px rgba(0,0,0,0.26) !important;
+}
+
 /* Progress bar */
 .intro-progress {
   position: absolute;
@@ -1065,39 +1089,43 @@ footer p { font-size: 12px; color: var(--text-muted); }
   100% { width: 100%; }
 }
 
-/* ── RESPONSIVE ── */
+/* ── RESPONSIVE: intro-only, no product sections ── */
 @media (max-width: 767px) {
   .intro-text {
-    top: 42%;
+    top: 38%;
+    width: 92%;
+    max-width: none;
   }
   .intro-headline {
-    font-size: clamp(22px, 6.5vw, 34px);
-    margin-bottom: clamp(14px, 3.5vw, 22px);
+    font-size: clamp(24px, 7vw, 36px);
+    letter-spacing: -0.01em;
+    margin-bottom: clamp(14px, 3.5vw, 20px);
   }
   .intro-subline {
-    font-size: clamp(13px, 3.5vw, 16px);
-    line-height: 1.62;
-  }
-  .intro-cta button {
-    padding: 15px 36px;
-    font-size: 15px;
+    font-size: clamp(13px, 3.8vw, 16px);
+    font-weight: 400;
+    line-height: 1.58;
+    color: rgba(255,255,255,0.80);
   }
   .intro-cta {
-    bottom: max(36px, env(safe-area-inset-bottom, 36px));
-    width: calc(100% - 48px);
+    bottom: max(32px, env(safe-area-inset-bottom, 32px));
+    width: calc(100% - 40px);
   }
   .intro-cta button {
     width: 100%;
+    padding: 15px 32px;
   }
 }
 
 @media (min-width: 768px) and (max-width: 1024px) {
-  .intro-headline { font-size: clamp(26px, 4.6vw, 42px); }
-  .intro-subline  { font-size: clamp(14px, 1.8vw, 17px); }
+  .intro-text { top: 40%; }
+  .intro-headline { font-size: clamp(28px, 4.8vw, 44px); }
+  .intro-subline  { font-size: clamp(14px, 1.8vw, 18px); }
+  .intro-cta { bottom: clamp(40px, 6vh, 72px); }
 }
 
 @media (min-width: 1728px) {
-  .intro-headline { font-size: 60px; }
+  .intro-headline { font-size: 58px; }
   .intro-subline  { font-size: 20px; }
 }
 
@@ -1111,26 +1139,38 @@ footer p { font-size: 12px; color: var(--text-muted); }
 /* ── TABLET: product section spacing fix ── */
 @media (min-width: 768px) and (max-width: 1024px) {
   .product-section {
-    padding-top: 80px;
-    padding-bottom: 24px;
+    padding-top: 72px;
+    padding-bottom: 20px;
   }
   .product-image {
     width: min(94vw, 820px);
-    margin: 20px auto 0;
+    margin: 12px auto 0;
     overflow: hidden;
   }
-  /* zoom 130% on tablet — optical left shift ~1.5% to compensate mirror weight */
+  /* zoom 130% on tablet — moderately tighter transparent padding */
   .product-image img {
     width: 130%;
-    margin-left: -16.5%;
+    margin-left: -15%;
     margin-top: -6%;
     height: auto;
   }
 }
 
-/* ── VIDEO: shifted ~2% right to move bottle left optically ── */
+/* ── VIDEO: per-breakpoint composition for optical balance ── */
+/* Desktop/tablet: shift right ~4% so bottle reads left-of-center, countering heavy left mirrors */
 .intro-video {
   object-position: 54% center !important;
+}
+/* Mobile: center composition vertically higher to show bottle in frame */
+@media (max-width: 767px) {
+  .intro-video {
+    object-position: 52% 38% !important;
+  }
+}
+@media (min-width: 768px) and (max-width: 1024px) {
+  .intro-video {
+    object-position: 54% 45% !important;
+  }
 }
 
 
@@ -1188,18 +1228,17 @@ footer p { font-size: 12px; color: var(--text-muted); }
 /* Desktop */
 @media (min-width: 1025px) {
   .product-section {
-    padding-top: 84px;
-    padding-bottom: 24px;
+    padding-bottom: 20px;
   }
   .product-image {
     width: min(96vw, 1000px);
-    margin: 24px auto 0;
+    margin: 12px auto 0;
     overflow: hidden;
   }
-  /* zoom 115% on desktop — optical left shift ~1% to compensate mirror weight */
+  /* zoom 115% on desktop — subtle tighten of transparent frame */
   .product-image img {
     width: 115%;
-    margin-left: -8.5%;
+    margin-left: -7.5%;
     margin-top: -5%;
     height: auto;
   }
