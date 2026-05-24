@@ -3674,5 +3674,328 @@ document.querySelectorAll('.mobile-nav-item, .mobile-explore-item:not(.disabled)
   }
 })();
 
+// ══════════════════════════════════════
+// CHECKOUT SYSTEM
+// ══════════════════════════════════════
+
+function goToCheckout() {
+  closeCart();
+  switchPage('checkout');
+}
+
+function coInitialize() {
+  if (cart.length === 0) {
+    document.getElementById('coLayout').style.display = 'none';
+    document.getElementById('coEmptyState').style.display = 'block';
+    return;
+  }
+  document.getElementById('coLayout').style.display = '';
+  document.getElementById('coEmptyState').style.display = 'none';
+  coResetSteps();
+  coPopulateSummary();
+}
+
+function coResetSteps() {
+  [1,2,3].forEach(function(n) {
+    var step = document.getElementById('coStep' + n);
+    var form = document.getElementById('coForm' + n);
+    var completed = document.getElementById('coCompleted' + n);
+    var editBtn = document.getElementById('coEdit' + n);
+    if (!step) return;
+    step.classList.remove('co-locked');
+    if (n > 1) step.classList.add('co-locked');
+    if (form) form.style.display = '';
+    if (completed) completed.style.display = 'none';
+    if (editBtn) editBtn.style.display = 'none';
+    // clear field errors
+    step.querySelectorAll('.co-field').forEach(function(f) { f.classList.remove('has-error'); });
+    step.querySelectorAll('.co-input').forEach(function(i) { i.classList.remove('co-valid'); });
+  });
+  // clear payment fields
+  ['coCardNum','coExpiry','coCvv'].forEach(function(id) {
+    var el = document.getElementById(id);
+    if (el) el.value = '';
+  });
+}
+
+function coPopulateSummary() {
+  var container = document.getElementById('coSummaryItems');
+  if (!container) return;
+  var html = '';
+  var total = 0;
+  for (var i = 0; i < cart.length; i++) {
+    var item = cart[i];
+    var imgId = item.id.split('-sub-')[0];
+    var imgEl = document.querySelector('#' + imgId + ' .product-image img');
+    var src = imgEl ? imgEl.src : '';
+    var meta = [];
+    if (item.ingredients) meta.push(item.ingredients);
+    if (item.plan) meta.push(item.plan + ' · ' + item.period);
+    if (item.priceLabel) meta.push(item.priceLabel);
+    total += (item.price || 0);
+    html += '<div class="co-summary-item">'
+      + (src ? '<img class="co-summary-item-img" src="' + src + '" alt="' + item.name + '">' : '')
+      + '<div class="co-summary-item-info">'
+      + '<div class="co-summary-item-name">' + item.name + '</div>'
+      + (meta.length ? '<div class="co-summary-item-meta">' + meta.join('<br>') + '</div>' : '')
+      + '</div>'
+      + '<div class="co-summary-item-price">€' + (item.price || 0) + '</div>'
+      + '</div>';
+  }
+  container.innerHTML = html;
+  document.getElementById('coSummaryTotal').textContent = '€' + total.toFixed(0);
+}
+
+// ── Step validation ──
+
+function coValidateStep(n) {
+  var ok = true;
+  function check(fieldId, inputId, testFn) {
+    var field = document.getElementById('coField-' + fieldId);
+    var input = document.getElementById(inputId);
+    if (!field || !input) return;
+    var valid = testFn(input.value.trim());
+    field.classList.toggle('has-error', !valid);
+    input.classList.toggle('co-valid', valid);
+    if (!valid) ok = false;
+  }
+  if (n === 1) {
+    check('firstName', 'coFirstName', function(v) { return v.length > 0; });
+    check('lastName',  'coLastName',  function(v) { return v.length > 0; });
+    check('email',     'coEmail',     function(v) { return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v); });
+  }
+  if (n === 2) {
+    check('address', 'coAddress', function(v) { return v.length > 0; });
+    check('city',    'coCity',    function(v) { return v.length > 0; });
+    check('zip',     'coZip',     function(v) { return v.length > 0; });
+    check('country', 'coCountry', function(v) { return v.length > 0; });
+  }
+  if (n === 3) {
+    check('card',   'coCardNum', function(v) { return v.replace(/\s/g,'').length === 16; });
+    check('expiry', 'coExpiry',  function(v) {
+      if (!/^\d{2}\/\d{2}$/.test(v)) return false;
+      var parts = v.split('/');
+      var m = parseInt(parts[0]); var y = parseInt('20' + parts[1]);
+      var now = new Date(); var nowY = now.getFullYear(); var nowM = now.getMonth() + 1;
+      return m >= 1 && m <= 12 && (y > nowY || (y === nowY && m >= nowM));
+    });
+    check('cvv', 'coCvv', function(v) { return /^\d{3}$/.test(v); });
+  }
+  return ok;
+}
+
+function coContinue(n) {
+  if (!coValidateStep(n)) return;
+
+  // Mark step as completed
+  var form = document.getElementById('coForm' + n);
+  var completed = document.getElementById('coCompleted' + n);
+  var editBtn = document.getElementById('coEdit' + n);
+
+  if (form) form.style.display = 'none';
+  if (completed) {
+    completed.style.display = 'flex';
+    var summaryEl = document.getElementById('coSummaryContact');
+    if (n === 1 && summaryEl) {
+      var fn = document.getElementById('coFirstName').value.trim();
+      var ln = document.getElementById('coLastName').value.trim();
+      var em = document.getElementById('coEmail').value.trim();
+      summaryEl.textContent = fn + ' ' + ln + ' · ' + em;
+    }
+    var delEl = document.getElementById('coSummaryDelivery');
+    if (n === 2 && delEl) {
+      var addr = document.getElementById('coAddress').value.trim();
+      var city = document.getElementById('coCity').value.trim();
+      var country = document.getElementById('coCountry').value.trim();
+      delEl.textContent = addr + ', ' + city + ', ' + country;
+    }
+  }
+  if (editBtn) editBtn.style.display = 'block';
+
+  // Unlock next step
+  var next = document.getElementById('coStep' + (n + 1));
+  if (next) {
+    next.classList.remove('co-locked');
+    setTimeout(function() {
+      next.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }, 120);
+  }
+}
+
+function coEditStep(n) {
+  var form = document.getElementById('coForm' + n);
+  var completed = document.getElementById('coCompleted' + n);
+  if (form) form.style.display = '';
+  if (completed) completed.style.display = 'none';
+  // re-lock subsequent steps
+  for (var i = n + 1; i <= 3; i++) {
+    var s = document.getElementById('coStep' + i);
+    if (s) s.classList.add('co-locked');
+    var f = document.getElementById('coForm' + i);
+    var c = document.getElementById('coCompleted' + i);
+    var e = document.getElementById('coEdit' + i);
+    if (f) f.style.display = '';
+    if (c) c.style.display = 'none';
+    if (e) e.style.display = 'none';
+  }
+  // clear payment fields when re-editing earlier steps
+  ['coCardNum','coExpiry','coCvv'].forEach(function(id) {
+    var el = document.getElementById(id);
+    if (el) el.value = '';
+  });
+}
+
+// ── Card input formatting ──
+
+(function() {
+  function wirePaymentInputs() {
+    var cardInput = document.getElementById('coCardNum');
+    var expiryInput = document.getElementById('coExpiry');
+    var cvvInput = document.getElementById('coCvv');
+    if (!cardInput) return;
+
+    cardInput.addEventListener('input', function(e) {
+      var raw = e.target.value.replace(/\D/g,'').slice(0,16);
+      var formatted = raw.match(/.{1,4}/g);
+      e.target.value = formatted ? formatted.join(' ') : raw;
+      if (raw.length === 16) document.getElementById('coField-card').classList.remove('has-error');
+    });
+
+    expiryInput.addEventListener('input', function(e) {
+      var raw = e.target.value.replace(/\D/g,'').slice(0,4);
+      if (raw.length >= 3) {
+        e.target.value = raw.slice(0,2) + '/' + raw.slice(2);
+      } else {
+        e.target.value = raw;
+      }
+    });
+
+    cvvInput.addEventListener('input', function(e) {
+      e.target.value = e.target.value.replace(/\D/g,'').slice(0,3);
+    });
+
+    // Live blur validation
+    [cardInput, expiryInput, cvvInput].forEach(function(inp) {
+      inp.addEventListener('blur', function() {
+        var fieldId = inp.id === 'coCardNum' ? 'card' : inp.id === 'coExpiry' ? 'expiry' : 'cvv';
+        var field = document.getElementById('coField-' + fieldId);
+        if (!field) return;
+        // only validate if not empty
+        if (inp.value.trim().length === 0) return;
+        coValidateStep(3);
+      });
+    });
+  }
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', wirePaymentInputs);
+  } else {
+    wirePaymentInputs();
+  }
+})();
+
+// ── Live blur validation for contact/delivery fields ──
+(function() {
+  function wireBlur() {
+    var contactIds = ['coFirstName','coLastName','coEmail'];
+    var deliveryIds = ['coAddress','coCity','coZip','coCountry'];
+    contactIds.forEach(function(id) {
+      var el = document.getElementById(id);
+      if (!el) return;
+      el.addEventListener('blur', function() { if (el.value.trim()) coValidateStep(1); });
+    });
+    deliveryIds.forEach(function(id) {
+      var el = document.getElementById(id);
+      if (!el) return;
+      el.addEventListener('blur', function() { if (el.value.trim()) coValidateStep(2); });
+    });
+  }
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', wireBlur);
+  } else {
+    wireBlur();
+  }
+})();
+
+// ── Payment flows ──
+
+function coApplePay() {
+  coShowProcessing('Authorizing…');
+  setTimeout(function() { coCompletePayment(); }, 1600);
+}
+
+function coPayCard() {
+  if (!coValidateStep(3)) return;
+  coShowProcessing('Processing…');
+  setTimeout(function() { coCompletePayment(); }, 1800);
+}
+
+function coShowProcessing(label) {
+  var el = document.getElementById('coProcessing');
+  var labelEl = el.querySelector('.co-processing-label');
+  if (labelEl) labelEl.textContent = label;
+  el.classList.add('active');
+}
+
+function coCompletePayment() {
+  var proc = document.getElementById('coProcessing');
+  proc.classList.remove('active');
+
+  // Generate order ref
+  var ref = 'UJI-' + new Date().getFullYear() + '-' + Math.random().toString(36).slice(2,6).toUpperCase();
+  document.getElementById('coOrderRef').textContent = ref;
+
+  // Persist to localStorage
+  coSaveOrder(ref);
+
+  // Show success
+  setTimeout(function() {
+    var succ = document.getElementById('coSuccess');
+    succ.classList.add('active');
+  }, 200);
+}
+
+function coSaveOrder(ref) {
+  try {
+    var orders = JSON.parse(localStorage.getItem('uji204_orders') || '[]');
+    orders.push({
+      orderId: ref,
+      timestamp: Date.now(),
+      contact: {
+        firstName: (document.getElementById('coFirstName') || {}).value || '',
+        lastName:  (document.getElementById('coLastName')  || {}).value || '',
+        email:     (document.getElementById('coEmail')     || {}).value || ''
+      },
+      delivery: {
+        address: (document.getElementById('coAddress') || {}).value || '',
+        city:    (document.getElementById('coCity')    || {}).value || '',
+        zip:     (document.getElementById('coZip')     || {}).value || '',
+        country: (document.getElementById('coCountry') || {}).value || ''
+      },
+      items: cart.slice()
+    });
+    localStorage.setItem('uji204_orders', JSON.stringify(orders));
+  } catch(e) {}
+}
+
+function coFinish() {
+  // Hide success screen
+  document.getElementById('coSuccess').classList.remove('active');
+  // Clear cart
+  cart = [];
+  updateCartBadge();
+  renderCart();
+  // Navigate home
+  switchPage('home');
+}
+
+// Hook into switchPage to initialize checkout when navigating to it
+var _coOrigSwitch = switchPage;
+switchPage = function(name) {
+  _coOrigSwitch(name);
+  if (name === 'checkout') {
+    setTimeout(coInitialize, 0);
+  }
+};
+
 </script>
 </body></html>
