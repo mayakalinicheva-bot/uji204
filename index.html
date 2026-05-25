@@ -1756,6 +1756,153 @@ footer p { font-size: 12px; color: var(--text-muted); }
   .co-layout { padding: 16px 12px 80px; }
 }
 
+/* ══════════════════════════════════════
+   ACCOUNT SYSTEM
+══════════════════════════════════════ */
+
+#page-account { background: var(--bg); min-height: 100vh; padding-top: 80px; }
+
+.ac-page { max-width: 960px; margin: 0 auto; padding: 48px 24px 80px; display: flex; flex-direction: column; gap: 14px; }
+
+.ac-card {
+  background: rgba(255,255,255,0.68);
+  backdrop-filter: blur(18px) saturate(150%);
+  -webkit-backdrop-filter: blur(18px) saturate(150%);
+  border: 1px solid rgba(255,255,255,0.90);
+  border-bottom-color: rgba(0,0,0,0.05);
+  box-shadow: 0 1.5px 0 rgba(255,255,255,0.90) inset, 0 4px 20px rgba(0,0,0,0.05), 0 1px 3px rgba(0,0,0,0.03);
+  border-radius: 22px;
+  padding: 32px;
+}
+.ac-section-label { font-size: 11px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 16px; }
+.ac-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+
+/* Header */
+.ac-header { padding: 36px 32px 32px; }
+.ac-greeting-row { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 14px; }
+.ac-greeting { font-size: clamp(32px,5vw,52px); font-weight: 700; letter-spacing: -0.03em; line-height: 1; }
+.ac-greeting-edit { display: inline-flex; align-items: center; gap: 6px; background: none; border: none; cursor: pointer; padding: 8px; color: var(--text-muted); font-family: var(--font); font-size: 12px; font-weight: 500; transition: color 0.2s; border-radius: 8px; margin-top: 4px; }
+.ac-greeting-edit:hover { color: var(--text); }
+.ac-greeting-edit svg { width: 13px; height: 13px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.ac-sub-summary { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.ac-sub-pill { display: inline-flex; align-items: center; gap: 6px; height: 28px; padding: 0 12px; border-radius: 999px; background: rgba(42,172,74,0.10); border: 1px solid rgba(42,172,74,0.22); font-size: 12px; font-weight: 600; color: var(--green); }
+.ac-sub-pill-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--green); }
+
+/* Delivery */
+.ac-delivery-date { font-size: clamp(24px,4vw,38px); font-weight: 700; letter-spacing: -0.03em; margin-bottom: 4px; line-height: 1.1; }
+.ac-delivery-sub { font-size: 13px; color: var(--text-muted); margin-bottom: 18px; }
+.ac-schedule-row { display: flex; gap: 6px; flex-wrap: wrap; }
+.ac-day-pill { height: 28px; padding: 0 10px; border-radius: 999px; font-size: 11px; font-weight: 600; letter-spacing: 0.02em; display: inline-flex; align-items: center; }
+.ac-day-pill.active { background: rgba(42,172,74,0.12); border: 1px solid rgba(42,172,74,0.22); color: var(--green); }
+.ac-day-pill.inactive { background: rgba(0,0,0,0.04); border: 1px solid rgba(0,0,0,0.07); color: var(--text-muted); }
+.ac-edit-link { display: inline-flex; align-items: center; gap: 5px; font-size: 12px; font-weight: 500; color: var(--green); cursor: pointer; background: none; border: none; font-family: var(--font); padding: 0; margin-top: 16px; transition: opacity 0.2s; }
+.ac-edit-link:hover { opacity: 0.72; }
+.ac-edit-link svg { width: 12px; height: 12px; stroke: currentColor; fill: none; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
+
+/* Plan */
+.ac-plan-name { font-size: 22px; font-weight: 700; letter-spacing: -0.02em; margin-bottom: 6px; }
+.ac-plan-desc { font-size: 14px; color: var(--text-muted); margin-bottom: 20px; line-height: 1.55; }
+.ac-plan-meta { display: flex; flex-direction: column; gap: 9px; margin-bottom: 24px; }
+.ac-plan-meta-row { display: flex; align-items: center; justify-content: space-between; font-size: 13px; }
+.ac-plan-meta-row span:first-child { color: var(--text-muted); }
+.ac-plan-meta-row span:last-child { font-weight: 500; }
+.ac-change-plan { display: inline-flex; align-items: center; font-size: 13px; color: var(--text-muted); cursor: pointer; background: none; border: 1px solid rgba(0,0,0,0.11); border-radius: var(--radius); padding: 9px 18px; font-family: var(--font); font-weight: 500; transition: border-color 0.2s, color 0.2s; }
+.ac-change-plan:hover { border-color: rgba(0,0,0,0.22); color: var(--text); }
+
+/* Gallery */
+.ac-gallery-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px; }
+.ac-gallery-wrap { display: flex; gap: 12px; align-items: stretch; }
+.ac-drink-card {
+  width: 136px; flex-shrink: 0;
+  background: rgba(255,255,255,0.60);
+  backdrop-filter: blur(14px) saturate(140%);
+  -webkit-backdrop-filter: blur(14px) saturate(140%);
+  border: 1px solid rgba(255,255,255,0.88);
+  border-bottom-color: rgba(0,0,0,0.05);
+  box-shadow: 0 1.5px 0 rgba(255,255,255,0.90) inset, 0 4px 16px rgba(0,0,0,0.07), 0 1px 3px rgba(0,0,0,0.04);
+  border-radius: 18px; padding: 20px 14px 16px;
+  cursor: pointer;
+  transition: transform 0.22s cubic-bezier(0.34,1.06,0.64,1), box-shadow 0.22s ease, border-color 0.2s;
+  display: flex; flex-direction: column; align-items: center; gap: 10px;
+}
+.ac-drink-card.selected { border-color: rgba(42,172,74,0.40); box-shadow: 0 1.5px 0 rgba(255,255,255,0.90) inset, 0 0 0 2px rgba(42,172,74,0.18), 0 6px 24px rgba(0,0,0,0.09); }
+.ac-drink-card:hover:not(.selected) { transform: translateY(-2px); box-shadow: 0 1.5px 0 rgba(255,255,255,0.90) inset, 0 8px 24px rgba(0,0,0,0.10); }
+.ac-drink-img { width: 54px; height: 78px; object-fit: contain; }
+.ac-drink-name { font-size: 13px; font-weight: 700; letter-spacing: -0.01em; text-align: center; }
+.ac-drink-plan { font-size: 11px; color: var(--text-muted); text-align: center; }
+.ac-add-card { width: 136px; border: 1.5px dashed rgba(0,0,0,0.13); border-radius: 18px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; cursor: pointer; padding: 20px 14px; color: var(--text-muted); font-size: 12px; font-weight: 500; transition: border-color 0.2s, color 0.2s; background: none; font-family: var(--font); flex-shrink: 0; }
+.ac-add-card:hover { border-color: rgba(42,172,74,0.40); color: var(--green); }
+.ac-add-card svg { width: 22px; height: 22px; stroke: currentColor; fill: none; stroke-width: 1.5; stroke-linecap: round; }
+
+/* Ingredients */
+.ac-ing-wrap { display: flex; gap: 28px; align-items: center; flex-wrap: wrap; }
+.ac-ing-bottle img { width: 72px; height: 108px; object-fit: contain; }
+.ac-ing-circles { display: flex; gap: 16px; flex-wrap: wrap; }
+.ac-ing-item { display: flex; flex-direction: column; align-items: center; gap: 7px; cursor: pointer; }
+.ac-ing-circle { width: 52px; height: 52px; border-radius: 50%; background: rgba(255,255,255,0.72); border: 1px solid rgba(255,255,255,0.80); border-bottom-color: rgba(0,0,0,0.08); box-shadow: 0 1px 0 rgba(255,255,255,0.66) inset, 0 -1px 0 rgba(0,0,0,0.05) inset, 0 0 0 0.5px rgba(255,255,255,0.26), 0 2px 8px rgba(0,0,0,0.10); display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; letter-spacing: 0.03em; transition: transform 0.18s ease, box-shadow 0.18s ease; }
+.ac-ing-circle:hover { transform: scale(1.07); box-shadow: 0 1px 0 rgba(255,255,255,0.80) inset, 0 -1px 0 rgba(0,0,0,0.05) inset, 0 0 0 0.5px rgba(255,255,255,0.30), 0 4px 14px rgba(0,0,0,0.13); }
+.ac-ing-label { font-size: 11px; color: var(--text-muted); text-align: center; max-width: 60px; line-height: 1.3; }
+.ac-ing-notice { font-size: 12px; color: var(--text-muted); margin-top: 18px; display: none; align-items: center; gap: 6px; }
+.ac-ing-notice.show { display: flex; }
+.ac-ing-notice svg { width: 13px; height: 13px; stroke: var(--green); fill: none; stroke-width: 2; flex-shrink: 0; }
+
+/* Orders */
+.ac-orders-list { display: flex; flex-direction: column; }
+.ac-order-row { display: grid; grid-template-columns: 1fr auto auto auto; align-items: center; gap: 16px; padding: 14px 0; border-bottom: 1px solid rgba(0,0,0,0.06); }
+.ac-order-row:last-child { border-bottom: none; }
+.ac-order-id { font-size: 13px; font-weight: 600; font-variant-numeric: tabular-nums; }
+.ac-order-date { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+.ac-order-drinks { font-size: 12px; color: var(--text-muted); }
+.ac-order-amount { font-size: 13px; font-weight: 600; }
+.ac-order-status { font-size: 11px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; padding: 4px 10px; border-radius: 999px; }
+.ac-order-status.active { background: rgba(42,172,74,0.10); color: var(--green); }
+.ac-order-status.processing { background: rgba(0,0,0,0.05); color: var(--text-muted); }
+
+/* Payment */
+.ac-payment-row { display: flex; align-items: center; justify-content: space-between; }
+.ac-payment-display { display: flex; align-items: center; gap: 14px; }
+.ac-payment-icon { width: 44px; height: 30px; border-radius: 6px; background: rgba(0,0,0,0.06); display: flex; align-items: center; justify-content: center; font-size: 9px; font-weight: 700; color: var(--text-muted); letter-spacing: 0.05em; flex-shrink: 0; }
+.ac-payment-mask { font-size: 14px; font-weight: 500; letter-spacing: 0.08em; }
+.ac-payment-sub { font-size: 12px; color: var(--text-muted); }
+
+/* Modal overlay */
+.ac-modal-overlay { position: fixed; inset: 0; z-index: 400; background: rgba(0,0,0,0.22); display: flex; align-items: flex-end; justify-content: center; opacity: 0; pointer-events: none; transition: opacity 0.24s ease; padding: 0 12px 24px; }
+.ac-modal-overlay.open { opacity: 1; pointer-events: auto; }
+.ac-modal { width: 100%; max-width: 420px; background: rgba(248,248,250,0.96); backdrop-filter: blur(28px) saturate(180%); -webkit-backdrop-filter: blur(28px) saturate(180%); border: 1px solid rgba(255,255,255,0.92); border-radius: 24px; padding: 28px 24px 20px; transform: translateY(20px); transition: transform 0.30s cubic-bezier(0.34,1.06,0.64,1); }
+.ac-modal-overlay.open .ac-modal { transform: translateY(0); }
+.ac-modal-title { font-size: 15px; font-weight: 600; margin-bottom: 18px; }
+.ac-modal-options { display: flex; flex-direction: column; gap: 8px; margin-bottom: 16px; }
+.ac-modal-option { display: flex; align-items: center; justify-content: space-between; padding: 13px 16px; border-radius: 14px; border: 1px solid rgba(0,0,0,0.08); background: rgba(255,255,255,0.70); cursor: pointer; font-size: 14px; font-weight: 500; transition: border-color 0.16s, background 0.16s; }
+.ac-modal-option.sel { border-color: rgba(42,172,74,0.40); background: rgba(42,172,74,0.06); color: var(--green); }
+.ac-modal-option:hover:not(.sel) { border-color: rgba(0,0,0,0.14); background: rgba(255,255,255,0.90); }
+.ac-modal-check { width: 18px; height: 18px; border-radius: 50%; border: 1.5px solid rgba(0,0,0,0.15); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.ac-modal-option.sel .ac-modal-check { background: var(--green); border-color: var(--green); }
+.ac-modal-option.sel .ac-modal-check::after { content: ''; width: 6px; height: 6px; border-radius: 50%; background: #fff; display: block; }
+.ac-modal-cancel { width: 100%; height: 46px; background: rgba(255,255,255,0.70); border: 1px solid rgba(0,0,0,0.10); border-radius: var(--radius); font-family: var(--font); font-size: 14px; font-weight: 500; color: var(--text-muted); cursor: pointer; transition: background 0.16s; }
+.ac-modal-cancel:hover { background: rgba(255,255,255,0.90); }
+.ac-day-toggle { height: 36px; padding: 0 14px; border-radius: 999px; font-family: var(--font); font-size: 13px; font-weight: 500; border: 1px solid rgba(0,0,0,0.10); background: rgba(255,255,255,0.70); cursor: pointer; transition: all 0.16s; }
+.ac-day-toggle.on { background: rgba(42,172,74,0.12); border-color: rgba(42,172,74,0.30); color: var(--green); }
+.ac-deliv-days { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 20px; }
+.ac-deliv-input { width: 100%; margin-bottom: 10px; }
+
+/* Toast */
+.ac-toast { position: fixed; bottom: 32px; left: 50%; transform: translateX(-50%) translateY(16px); background: rgba(18,18,20,0.92); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); color: #fff; font-size: 13px; font-weight: 500; padding: 12px 22px; border-radius: var(--radius); z-index: 600; opacity: 0; pointer-events: none; transition: opacity 0.24s ease, transform 0.24s ease; white-space: nowrap; }
+.ac-toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+/* Responsive */
+@media (max-width: 767px) {
+  #page-account { padding-top: 72px; }
+  .ac-page { padding: 20px 12px 80px; }
+  .ac-card { padding: 22px 18px; }
+  .ac-header { padding: 22px 18px 18px; }
+  .ac-row { grid-template-columns: 1fr; }
+  .ac-gallery-wrap { overflow-x: auto; flex-wrap: nowrap; -webkit-overflow-scrolling: touch; padding-bottom: 6px; scrollbar-width: none; }
+  .ac-gallery-wrap::-webkit-scrollbar { display: none; }
+  .ac-ing-wrap { gap: 16px; }
+  .ac-order-row { grid-template-columns: 1fr auto; gap: 8px; }
+  .ac-order-drinks, .ac-order-amount { display: none; }
+}
+
 </style>
 </head><body>
 <!-- ══ INTRO OVERLAY ══ -->
@@ -1816,7 +1963,7 @@ footer p { font-size: 12px; color: var(--text-muted); }
       <a href="#" onclick="switchPage('about'); return false;">About</a>
       <a href="#" id="exploreBtn">Explore</a>
       <a href="#">Support</a>
-      <a href="#">Account</a>
+      <a href="#" onclick="goToAccount(); return false;">Account</a>
     </nav>
     <div class="header-icons">
       <button onclick="openSearch()" aria-label="Search">
@@ -1855,7 +2002,7 @@ footer p { font-size: 12px; color: var(--text-muted); }
         <div class="mobile-nav-item" onclick="closeMobileDropdown()">
           Support
         </div>
-        <div class="mobile-nav-item" onclick="closeMobileDropdown()">
+        <div class="mobile-nav-item" onclick="closeMobileDropdown(); goToAccount()">
           Account
         </div>
       </div>
@@ -2980,6 +3127,124 @@ footer p { font-size: 12px; color: var(--text-muted); }
 </div><!-- end co-layout -->
 </div><!-- end page-checkout -->
 
+<!-- TOAST (global, outside pages) -->
+<div class="ac-toast" id="acToast"></div>
+
+<!-- INGREDIENT SELECTOR MODAL -->
+<div class="ac-modal-overlay" id="acIngModal" onclick="acCloseIngModal(event)">
+  <div class="ac-modal">
+    <div class="ac-modal-title" id="acModalTitle">Choose ingredient</div>
+    <div class="ac-modal-options" id="acModalOptions"></div>
+    <button class="ac-modal-cancel" onclick="document.getElementById('acIngModal').classList.remove('open')">Cancel</button>
+  </div>
+</div>
+
+<!-- DELIVERY EDIT MODAL -->
+<div class="ac-modal-overlay" id="acDelivModal" onclick="acCloseDelivModal(event)">
+  <div class="ac-modal">
+    <div class="ac-modal-title">Edit delivery</div>
+    <div class="ac-section-label">Delivery days</div>
+    <div class="ac-deliv-days" id="acDelivDays"></div>
+    <div class="ac-section-label" style="margin-bottom:8px">Address</div>
+    <input class="co-input ac-deliv-input" id="acDelivAddress" placeholder="Street address" style="margin-bottom:10px">
+    <input class="co-input ac-deliv-input" id="acDelivCity" placeholder="City">
+    <button class="checkout-btn" onclick="acSaveDelivery()" style="margin-top:16px;height:48px;width:100%">Save changes</button>
+    <button class="ac-modal-cancel" style="margin-top:8px" onclick="document.getElementById('acDelivModal').classList.remove('open')">Cancel</button>
+  </div>
+</div>
+
+<!-- ACCOUNT PAGE -->
+<div id="page-account" class="app-page" style="display:none">
+<div class="ac-page">
+
+  <!-- ── Section 1: Greeting ── -->
+  <div class="ac-card ac-header">
+    <div class="ac-greeting-row">
+      <div>
+        <div class="ac-greeting" id="acGreetingText">Hi!</div>
+        <div id="acGreetingEditWrap" style="display:none;margin-top:8px;display:none">
+          <input class="co-input" id="acNameInput" placeholder="First name" style="max-width:220px;height:44px;font-size:16px;font-weight:600">
+        </div>
+      </div>
+      <button class="ac-greeting-edit" onclick="acToggleNameEdit()" id="acEditNameBtn">
+        <svg viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+        <span id="acEditNameLabel">Edit</span>
+      </button>
+    </div>
+    <div class="ac-sub-summary" id="acSubSummary"></div>
+  </div>
+
+  <!-- ── Sections 2+3: Delivery + Plan (two-col) ── -->
+  <div class="ac-row">
+
+    <div class="ac-card">
+      <div class="ac-section-label">Next delivery</div>
+      <div class="ac-delivery-date" id="acDeliveryDate">—</div>
+      <div class="ac-delivery-sub" id="acDeliverySub">—</div>
+      <div class="ac-schedule-row" id="acScheduleRow"></div>
+      <button class="ac-edit-link" onclick="acOpenDeliveryEdit()">
+        <svg viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+        Edit schedule
+      </button>
+    </div>
+
+    <div class="ac-card">
+      <div class="ac-section-label">Active plan</div>
+      <div class="ac-plan-name" id="acPlanName">—</div>
+      <div class="ac-plan-desc" id="acPlanDesc">—</div>
+      <div class="ac-plan-meta" id="acPlanMeta"></div>
+      <button class="ac-change-plan" onclick="switchPage('home')">Change plan</button>
+    </div>
+
+  </div>
+
+  <!-- ── Section 4: Drink Gallery ── -->
+  <div class="ac-card">
+    <div class="ac-gallery-header">
+      <div class="ac-section-label" style="margin-bottom:0">Your formulas</div>
+    </div>
+    <div class="ac-gallery-wrap" id="acGallery"></div>
+  </div>
+
+  <!-- ── Section 5: Ingredient Visualization ── -->
+  <div class="ac-card" id="acIngredientsSection">
+    <div class="ac-section-label">Formula ingredients</div>
+    <div class="ac-ing-wrap">
+      <div class="ac-ing-bottle" id="acIngBottle"></div>
+      <div style="flex:1">
+        <div class="ac-ing-circles" id="acIngCircles"></div>
+        <div class="ac-ing-notice" id="acIngNotice">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          Changes will apply starting from your next delivery.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Section 6: Order History ── -->
+  <div class="ac-card">
+    <div class="ac-section-label">Order history</div>
+    <div class="ac-orders-list" id="acOrdersList"></div>
+  </div>
+
+  <!-- ── Section 7: Payment Method ── -->
+  <div class="ac-card">
+    <div class="ac-section-label">Payment method</div>
+    <div class="ac-payment-row">
+      <div class="ac-payment-display">
+        <div class="ac-payment-icon" id="acPayIcon">CARD</div>
+        <div>
+          <div class="ac-payment-mask" id="acPayMask">•••• ••••</div>
+          <div class="ac-payment-sub" id="acPaySub">Added at checkout</div>
+        </div>
+      </div>
+      <button class="ac-change-plan" onclick="acReplacePayment()">Replace</button>
+    </div>
+  </div>
+
+</div><!-- end ac-page -->
+</div><!-- end page-account -->
+
 
 <script>
 
@@ -3918,13 +4183,17 @@ function coEditStep(n) {
 
 // ── Payment flows ──
 
+window.coPayMethod = 'card';
+
 function coApplePay() {
+  window.coPayMethod = 'applepay';
   coShowProcessing('Authorizing…');
   setTimeout(function() { coCompletePayment(); }, 1600);
 }
 
 function coPayCard() {
   if (!coValidateStep(3)) return;
+  window.coPayMethod = 'card';
   coShowProcessing('Processing…');
   setTimeout(function() { coCompletePayment(); }, 1800);
 }
@@ -3956,24 +4225,35 @@ function coCompletePayment() {
 
 function coSaveOrder(ref) {
   try {
+    var fn  = (document.getElementById('coFirstName') || {}).value || '';
+    var ln  = (document.getElementById('coLastName')  || {}).value || '';
+    var em  = (document.getElementById('coEmail')     || {}).value || '';
+    var addr = (document.getElementById('coAddress')  || {}).value || '';
+    var city = (document.getElementById('coCity')     || {}).value || '';
+    var zip  = (document.getElementById('coZip')      || {}).value || '';
+    var cntry = (document.getElementById('coCountry') || {}).value || '';
+
     var orders = JSON.parse(localStorage.getItem('uji204_orders') || '[]');
     orders.push({
-      orderId: ref,
-      timestamp: Date.now(),
-      contact: {
-        firstName: (document.getElementById('coFirstName') || {}).value || '',
-        lastName:  (document.getElementById('coLastName')  || {}).value || '',
-        email:     (document.getElementById('coEmail')     || {}).value || ''
-      },
-      delivery: {
-        address: (document.getElementById('coAddress') || {}).value || '',
-        city:    (document.getElementById('coCity')    || {}).value || '',
-        zip:     (document.getElementById('coZip')     || {}).value || '',
-        country: (document.getElementById('coCountry') || {}).value || ''
-      },
+      orderId: ref, timestamp: Date.now(),
+      contact: { firstName: fn, lastName: ln, email: em },
+      delivery: { address: addr, city: city, zip: zip, country: cntry },
       items: cart.slice()
     });
     localStorage.setItem('uji204_orders', JSON.stringify(orders));
+
+    // Save / update user profile
+    var existing = {};
+    try { existing = JSON.parse(localStorage.getItem('uji204_user') || '{}'); } catch(e2) {}
+    var cardEl = document.getElementById('coCardNum');
+    var last4 = cardEl ? cardEl.value.replace(/\s/g,'').slice(-4) : '••••';
+    localStorage.setItem('uji204_user', JSON.stringify(Object.assign(existing, {
+      firstName: fn, lastName: ln, email: em,
+      address: addr, city: city, zip: zip, country: cntry,
+      paymentType: window.coPayMethod || 'card',
+      paymentLast4: window.coPayMethod === 'applepay' ? '' : last4,
+      createdAt: existing.createdAt || Date.now()
+    })));
   } catch(e) {}
 }
 
@@ -3992,10 +4272,402 @@ function coFinish() {
 var _coOrigSwitch = switchPage;
 switchPage = function(name) {
   _coOrigSwitch(name);
-  if (name === 'checkout') {
-    setTimeout(coInitialize, 0);
-  }
+  if (name === 'checkout') setTimeout(coInitialize, 0);
+  if (name === 'account')  setTimeout(acLoad, 0);
 };
+
+// ══════════════════════════════════════
+// ACCOUNT SYSTEM
+// ══════════════════════════════════════
+
+var AC_MONTHS   = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+var AC_DAY_S    = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+var AC_DAY_FULL = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+var AC_ING_OPTIONS = {
+  matcha:   ['Ceremonial Grade','Classic Blend','Daily Ritual','Origin Select'],
+  base:     ['Still Water','Sparkling Water','Oat Milk','Almond Milk'],
+  compound: ['L-Theanine','Ashwagandha Root','Ginger Extract','Adaptogen Blend']
+};
+var acActiveDrinkIdx = 0;
+var acCurrentIngType = null;
+var acCurrentIngItemId = null;
+var acDelivEditDays = [];
+
+function acGetOrders() {
+  try { return JSON.parse(localStorage.getItem('uji204_orders') || '[]'); } catch(e) { return []; }
+}
+function acGetUser() {
+  try { return JSON.parse(localStorage.getItem('uji204_user') || '{}'); } catch(e) { return {}; }
+}
+function acSaveUser(u) {
+  try { localStorage.setItem('uji204_user', JSON.stringify(u)); } catch(e) {}
+}
+
+function acGetAllDrinks(orders) {
+  var out = [];
+  for (var i = 0; i < orders.length; i++) {
+    var items = orders[i].items || [];
+    for (var j = 0; j < items.length; j++) out.push({ item: items[j], order: orders[i] });
+  }
+  return out;
+}
+
+function acGetPrimaryPlan(orders) {
+  if (!orders.length) return 'Base';
+  var items = orders[orders.length - 1].items || [];
+  return (items[0] && items[0].plan) || 'Base';
+}
+
+function acNextDelivDate(activeDays) {
+  var check = new Date(); check.setDate(check.getDate() + 1); check.setHours(0,0,0,0);
+  for (var i = 0; i < 14; i++) {
+    if (activeDays.indexOf(check.getDay()) !== -1) return check;
+    check.setDate(check.getDate() + 1);
+  }
+  return check;
+}
+
+// ── Entry point ──
+
+function goToAccount() {
+  if (!acGetOrders().length) {
+    switchPage('home');
+    setTimeout(function() { acShowToast('Choose your first formula.'); }, 320);
+    return;
+  }
+  switchPage('account');
+}
+
+function acLoad() {
+  var orders = acGetOrders();
+  var user   = acGetUser();
+  if (!orders.length) { switchPage('home'); return; }
+
+  var fn = (user.firstName || (orders[orders.length-1].contact && orders[orders.length-1].contact.firstName) || 'there').trim() || 'there';
+  acRenderGreeting(fn, orders);
+  acRenderDelivery(orders, user);
+  acRenderPlan(orders);
+  acActiveDrinkIdx = 0;
+  acRenderGallery(orders);
+  acSelectDrink(0, orders);
+  acRenderOrders(orders);
+  acRenderPayment(user);
+}
+
+// ── Greeting ──
+
+function acRenderGreeting(firstName, orders) {
+  var el = document.getElementById('acGreetingText');
+  if (el) el.textContent = 'Hi, ' + firstName + '!';
+
+  var plans = [], totalDrinks = 0;
+  for (var i = 0; i < orders.length; i++) {
+    var items = orders[i].items || [];
+    totalDrinks += items.length;
+    for (var j = 0; j < items.length; j++) {
+      if (items[j].plan && plans.indexOf(items[j].plan) === -1) plans.push(items[j].plan);
+    }
+  }
+  var s = document.getElementById('acSubSummary');
+  if (!s) return;
+  s.innerHTML = (plans.length ? '<div class="ac-sub-pill"><div class="ac-sub-pill-dot"></div>' + plans.join(' + ') + ' Plan</div>' : '')
+    + '<span style="font-size:13px;color:var(--text-muted)">' + totalDrinks + ' formula' + (totalDrinks !== 1 ? 's' : '') + ' active</span>';
+}
+
+function acToggleNameEdit() {
+  var display  = document.getElementById('acGreetingText');
+  var editWrap = document.getElementById('acGreetingEditWrap');
+  var lbl      = document.getElementById('acEditNameLabel');
+  var input    = document.getElementById('acNameInput');
+  if (!display || !editWrap || !input) return;
+  var editing = editWrap.style.display !== 'none';
+  if (editing) {
+    var v = input.value.trim();
+    if (v) {
+      var u = acGetUser(); u.firstName = v; acSaveUser(u);
+      display.textContent = 'Hi, ' + v + '!';
+    }
+    editWrap.style.display = 'none';
+    display.style.display  = '';
+    if (lbl) lbl.textContent = 'Edit';
+  } else {
+    input.value = display.textContent.replace(/^Hi,\s*/,'').replace(/!$/,'').trim();
+    display.style.display  = 'none';
+    editWrap.style.display = '';
+    input.focus();
+    if (lbl) lbl.textContent = 'Save';
+  }
+}
+
+// ── Delivery ──
+
+function acRenderDelivery(orders, user) {
+  var plan       = acGetPrimaryPlan(orders);
+  var defaultDays = plan === 'Plus' ? [0,1,2,3,4,5,6] : [1,3,5];
+  var activeDays = (user.deliveryDays && user.deliveryDays.length) ? user.deliveryDays : defaultDays;
+
+  var next = acNextDelivDate(activeDays);
+  var dateEl = document.getElementById('acDeliveryDate');
+  var subEl  = document.getElementById('acDeliverySub');
+  if (dateEl) dateEl.textContent = AC_DAY_FULL[next.getDay()] + ', ' + AC_MONTHS[next.getMonth()] + ' ' + next.getDate();
+  if (subEl)  subEl.textContent  = plan + ' Plan · ' + (plan === 'Plus' ? 'Daily delivery' : '3× per week');
+
+  var row = document.getElementById('acScheduleRow');
+  if (!row) return;
+  var html = '';
+  for (var d = 0; d < 7; d++) {
+    html += '<div class="ac-day-pill ' + (activeDays.indexOf(d) !== -1 ? 'active' : 'inactive') + '">' + AC_DAY_S[d] + '</div>';
+  }
+  row.innerHTML = html;
+}
+
+function acOpenDeliveryEdit() {
+  var orders = acGetOrders(); var user = acGetUser();
+  var plan = acGetPrimaryPlan(orders);
+  acDelivEditDays = (user.deliveryDays && user.deliveryDays.length) ? user.deliveryDays.slice() : (plan === 'Plus' ? [0,1,2,3,4,5,6] : [1,3,5]);
+
+  var wrap = document.getElementById('acDelivDays');
+  if (wrap) {
+    var h = '';
+    for (var d = 0; d < 7; d++) {
+      h += '<button class="ac-day-toggle' + (acDelivEditDays.indexOf(d) !== -1 ? ' on' : '') + '" onclick="acToggleDelivDay(' + d + ')" id="acDT' + d + '">' + AC_DAY_S[d] + '</button>';
+    }
+    wrap.innerHTML = h;
+  }
+  var lat = orders.length ? orders[orders.length-1] : {};
+  var del = lat.delivery || {};
+  var aEl = document.getElementById('acDelivAddress'); if (aEl) aEl.value = user.address || del.address || '';
+  var cEl = document.getElementById('acDelivCity');    if (cEl) cEl.value = user.city    || del.city    || '';
+  document.getElementById('acDelivModal').classList.add('open');
+}
+
+function acToggleDelivDay(d) {
+  var idx = acDelivEditDays.indexOf(d);
+  if (idx !== -1) { if (acDelivEditDays.length <= 1) return; acDelivEditDays.splice(idx, 1); }
+  else { acDelivEditDays.push(d); acDelivEditDays.sort(function(a,b){return a-b;}); }
+  var btn = document.getElementById('acDT' + d);
+  if (btn) btn.classList.toggle('on', acDelivEditDays.indexOf(d) !== -1);
+}
+
+function acSaveDelivery() {
+  var u = acGetUser();
+  u.deliveryDays = acDelivEditDays.slice();
+  var aEl = document.getElementById('acDelivAddress'); if (aEl) u.address = aEl.value.trim();
+  var cEl = document.getElementById('acDelivCity');    if (cEl) u.city    = cEl.value.trim();
+  acSaveUser(u);
+  document.getElementById('acDelivModal').classList.remove('open');
+  acRenderDelivery(acGetOrders(), u);
+  acShowToast('Delivery schedule saved.');
+}
+
+function acCloseDelivModal(e) {
+  if (e && e.target !== document.getElementById('acDelivModal')) return;
+  document.getElementById('acDelivModal').classList.remove('open');
+}
+
+// ── Plan ──
+
+function acRenderPlan(orders) {
+  var plan = acGetPrimaryPlan(orders);
+  var ne = document.getElementById('acPlanName');
+  var de = document.getElementById('acPlanDesc');
+  var me = document.getElementById('acPlanMeta');
+  if (ne) ne.textContent = plan + ' Plan';
+  if (de) de.textContent = plan === 'Plus'
+    ? 'Daily personalized formula with full access and priority dispatch.'
+    : 'Personalized formula with full ingredient control and weekly delivery.';
+  var lat  = orders[orders.length-1];
+  var item = (lat.items || [])[0] || {};
+  if (me) me.innerHTML =
+    '<div class="ac-plan-meta-row"><span>Billing</span><span>' + (item.period || '—') + '</span></div>' +
+    '<div class="ac-plan-meta-row"><span>Price</span><span>' + (item.priceLabel || '—') + '</span></div>' +
+    '<div class="ac-plan-meta-row"><span>Delivery</span><span>' + (plan === 'Plus' ? 'Daily' : '3× / week') + '</span></div>';
+}
+
+// ── Gallery ──
+
+function acRenderGallery(orders) {
+  var gallery = document.getElementById('acGallery');
+  if (!gallery) return;
+  var drinks = acGetAllDrinks(orders).slice(0, 12);
+  var html = '';
+  for (var i = 0; i < drinks.length; i++) {
+    var d = drinks[i];
+    var prodId = (d.item.id || '').split('-sub-')[0];
+    var imgEl  = prodId ? document.querySelector('#' + prodId + ' .product-image img') : null;
+    var src    = imgEl ? imgEl.src : '';
+    html += '<div class="ac-drink-card' + (i === acActiveDrinkIdx ? ' selected' : '') + '" onclick="acSelectDrink(' + i + ')">'
+      + (src ? '<img class="ac-drink-img" src="' + src + '" alt="' + (d.item.name||'') + '">' : '')
+      + '<div class="ac-drink-name">' + (d.item.name || '—') + '</div>'
+      + '<div class="ac-drink-plan">' + (d.item.plan || '') + '</div>'
+      + '</div>';
+  }
+  if (drinks.length < 12) {
+    html += '<button class="ac-add-card" onclick="acAddDrink()">'
+      + '<svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Add formula</button>';
+  }
+  gallery.innerHTML = html;
+}
+
+function acSelectDrink(idx, ordersArg) {
+  acActiveDrinkIdx = idx;
+  document.querySelectorAll('.ac-drink-card').forEach(function(c, i) { c.classList.toggle('selected', i === idx); });
+  var orders = ordersArg || acGetOrders();
+  var drinks = acGetAllDrinks(orders);
+  if (idx < drinks.length) acRenderIngredients(drinks[idx]);
+}
+
+// ── Ingredients ──
+
+function acRenderIngredients(drinkObj) {
+  var item = drinkObj.item;
+  var bottleEl  = document.getElementById('acIngBottle');
+  var circlesEl = document.getElementById('acIngCircles');
+  if (bottleEl) {
+    var prodId = (item.id || '').split('-sub-')[0];
+    var imgEl  = prodId ? document.querySelector('#' + prodId + ' .product-image img') : null;
+    bottleEl.innerHTML = imgEl ? '<img src="' + imgEl.src + '" alt="' + (item.name||'') + '">' : '';
+  }
+  if (!circlesEl) return;
+
+  var saved = {};
+  try { saved = JSON.parse(localStorage.getItem('uji204_ingredient_edits') || '{}'); } catch(e) {}
+  var ov    = saved[item.id] || {};
+  var parts = (item.ingredients || '').split(' · ');
+  var vals  = {
+    matcha:   ov.matcha   || parts[0] || 'Ceremonial Grade',
+    base:     ov.base     || parts[1] || 'Still Water',
+    compound: ov.compound || parts[2] || 'L-Theanine'
+  };
+
+  var html = '';
+  ['matcha','base','compound'].forEach(function(t) {
+    var v = vals[t];
+    var abbr = v.split(' ').map(function(w){return w[0]||'';}).join('').toUpperCase().slice(0,2);
+    var label = t.charAt(0).toUpperCase() + t.slice(1);
+    html += '<div class="ac-ing-item" onclick="acOpenIngEditor(\'' + t + '\',\'' + (item.id||'').replace(/'/g,"\\'") + '\')">'
+      + '<div class="ac-ing-circle">' + abbr + '</div>'
+      + '<div class="ac-ing-label">' + v.split(' ')[0] + '</div>'
+      + '</div>';
+  });
+  circlesEl.innerHTML = html;
+  var notice = document.getElementById('acIngNotice');
+  if (notice) notice.classList.remove('show');
+}
+
+function acOpenIngEditor(type, itemId) {
+  acCurrentIngType   = type;
+  acCurrentIngItemId = itemId;
+  var titles = { matcha: 'Choose matcha', base: 'Choose base liquid', compound: 'Choose compound' };
+  var titleEl = document.getElementById('acModalTitle');
+  if (titleEl) titleEl.textContent = titles[type] || 'Choose ingredient';
+
+  var saved = {};
+  try { saved = JSON.parse(localStorage.getItem('uji204_ingredient_edits') || '{}'); } catch(e) {}
+  var ov = saved[itemId] || {};
+
+  var orders = acGetOrders();
+  var drinks = acGetAllDrinks(orders);
+  var cur = drinks[acActiveDrinkIdx];
+  var parts = cur ? (cur.item.ingredients || '').split(' · ') : [];
+  var defs = { matcha: parts[0]||'', base: parts[1]||'', compound: parts[2]||'' };
+  var current = ov[type] || defs[type] || '';
+
+  var opts = AC_ING_OPTIONS[type] || [];
+  var html = '';
+  opts.forEach(function(o) {
+    var isSel = o === current || (!current && o === opts[0]);
+    html += '<div class="ac-modal-option' + (isSel ? ' sel' : '') + '" onclick="acSaveIngredient(\'' + o.replace(/'/g,"\\'") + '\')">'
+      + o + '<div class="ac-modal-check"></div></div>';
+  });
+  var optEl = document.getElementById('acModalOptions');
+  if (optEl) optEl.innerHTML = html;
+  document.getElementById('acIngModal').classList.add('open');
+}
+
+function acSaveIngredient(value) {
+  if (!acCurrentIngType || !acCurrentIngItemId) { document.getElementById('acIngModal').classList.remove('open'); return; }
+  var saved = {};
+  try { saved = JSON.parse(localStorage.getItem('uji204_ingredient_edits') || '{}'); } catch(e) {}
+  if (!saved[acCurrentIngItemId]) saved[acCurrentIngItemId] = {};
+  saved[acCurrentIngItemId][acCurrentIngType] = value;
+  try { localStorage.setItem('uji204_ingredient_edits', JSON.stringify(saved)); } catch(e) {}
+  document.getElementById('acIngModal').classList.remove('open');
+
+  var orders = acGetOrders();
+  var drinks = acGetAllDrinks(orders);
+  if (acActiveDrinkIdx < drinks.length) acRenderIngredients(drinks[acActiveDrinkIdx]);
+
+  var notice = document.getElementById('acIngNotice');
+  if (notice) { notice.classList.add('show'); clearTimeout(notice._t); notice._t = setTimeout(function(){ notice.classList.remove('show'); }, 5000); }
+}
+
+function acCloseIngModal(e) {
+  if (e && e.target !== document.getElementById('acIngModal')) return;
+  document.getElementById('acIngModal').classList.remove('open');
+}
+
+// ── Orders ──
+
+function acRenderOrders(orders) {
+  var list = document.getElementById('acOrdersList');
+  if (!list) return;
+  if (!orders.length) { list.innerHTML = '<p style="color:var(--text-muted);font-size:14px">No orders yet.</p>'; return; }
+  var html = '';
+  var rev = orders.slice().reverse();
+  rev.forEach(function(o, i) {
+    var d = new Date(o.timestamp);
+    var ds = AC_MONTHS[d.getMonth()] + ' ' + d.getDate() + ', ' + d.getFullYear();
+    var items = o.items || [];
+    var names = items.map(function(it){return it.name;}).join(', ') || '—';
+    var total = items.reduce(function(s,it){return s+(it.price||0);},0);
+    var cls   = i === 0 ? 'active' : 'processing';
+    var lbl   = i === 0 ? 'Active' : 'Processing';
+    html += '<div class="ac-order-row">'
+      + '<div><div class="ac-order-id">' + (o.orderId||'—') + '</div><div class="ac-order-date">' + ds + '</div></div>'
+      + '<div class="ac-order-drinks">' + names + '</div>'
+      + '<div class="ac-order-amount">€' + total + '</div>'
+      + '<div class="ac-order-status ' + cls + '">' + lbl + '</div>'
+      + '</div>';
+  });
+  list.innerHTML = html;
+}
+
+// ── Payment ──
+
+function acRenderPayment(user) {
+  var iconEl = document.getElementById('acPayIcon');
+  var maskEl = document.getElementById('acPayMask');
+  var subEl  = document.getElementById('acPaySub');
+  if (user.paymentType === 'applepay') {
+    if (iconEl) { iconEl.style.background = '#000'; iconEl.innerHTML = '<svg width="18" height="11" viewBox="0 0 24 15" fill="white"><path d="M5.8 2.8C5.2 3.5 4.3 4.1 3.4 4c-.1-.9.3-1.9.9-2.5C5 .8 6 .2 6.8.1c.1 1-.3 2-.8 2.7zm.8 1.3c-1.3-.1-2.5.7-3.1.7S1.9 3.1.8 3.2c-1.4 0-2.7.8-3.4 2C-2.5 7.5-1.6 11.3-.5 13c.5.8 1.2 1.6 2 1.6s1.1-.5 2.1-.5 1.3.5 2.1.5c.9 0 1.5-.8 2-1.6.9-1.3 1.2-2.6 1.2-2.6-.4-.2-2.3-1-2.3-3.2 0-2 1.6-2.9 1.7-3-.9-1.4-2.4-1.5-2.7-1.5z"/></svg>'; }
+    if (maskEl) maskEl.textContent = 'Apple Pay';
+    if (subEl)  subEl.textContent  = 'Default payment method';
+  } else {
+    if (iconEl) { iconEl.style.background = ''; iconEl.innerHTML = ''; iconEl.textContent = 'CARD'; }
+    if (maskEl) maskEl.textContent = '•••• •••• •••• ' + (user.paymentLast4 || '••••');
+    if (subEl)  subEl.textContent  = 'Added at checkout';
+  }
+}
+
+function acReplacePayment() { acShowToast('Payment editing coming soon.'); }
+
+// ── Add drink ──
+
+function acAddDrink() {
+  switchPage('home');
+}
+
+// ── Toast ──
+
+function acShowToast(msg) {
+  var t = document.getElementById('acToast');
+  if (!t) return;
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(t._timer);
+  t._timer = setTimeout(function(){ t.classList.remove('show'); }, 3200);
+}
 
 </script>
 </body></html>
