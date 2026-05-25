@@ -1977,6 +1977,8 @@ footer p { font-size: 12px; color: var(--text-muted); }
 .ac-day-toggle { height: 36px; padding: 0 14px; border-radius: 999px; font-family: var(--font); font-size: 13px; font-weight: 500; border: 1px solid rgba(0,0,0,0.10); background: rgba(255,255,255,0.70); cursor: pointer; transition: all 0.16s; color: var(--text); }
 .ac-day-toggle.on { background: rgba(42,172,74,0.12); border-color: rgba(42,172,74,0.30); color: var(--green); font-weight: 600; }
 .ac-day-toggle.disabled { opacity: 0.28; cursor: not-allowed; pointer-events: none; }
+.ac-deliv-preview { font-size: 13px; color: var(--text-muted); margin-bottom: 16px; min-height: 18px; }
+.ac-deliv-preview strong { color: var(--text); font-weight: 600; }
 .ac-deliv-days { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 20px; }
 .ac-deliv-input { width: 100%; margin-bottom: 10px; box-sizing: border-box; }
 
@@ -3239,7 +3241,8 @@ footer p { font-size: 12px; color: var(--text-muted); }
 <!-- DELIVERY EDIT MODAL -->
 <div class="ac-modal-overlay" id="acDelivModal" onclick="acCloseDelivModal(event)">
   <div class="ac-modal">
-    <div class="ac-modal-title">Edit delivery</div>
+    <div class="ac-modal-title" id="acDelivModalTitle">Edit delivery</div>
+    <div class="ac-deliv-preview" id="acDelivPreview"></div>
     <div class="ac-section-label">Delivery days</div>
     <div class="ac-deliv-days" id="acDelivDays"></div>
     <div class="ac-section-label" style="margin-bottom:8px">Address</div>
@@ -4647,13 +4650,27 @@ function acSelectFormula(idx) {
   acSync();
 }
 
+// Derive human-readable frequency label from actual selected day count and plan
+function acFrequencyLabel(days, plan) {
+  var n = days.length;
+  if (n === 0) return 'No delivery days set';
+  if (n === 7) return 'Daily';
+  if (n === 1) return '1× / week';
+  return n + '× / week';
+}
+
+// Format a Date as "Monday, Jan 5"
+function acFormatDate(d) {
+  return AC_DAY_FULL[d.getDay()] + ', ' + AC_MONTHS[d.getMonth()] + ' ' + d.getDate();
+}
+
 function acRenderDelivery(f) {
   var days   = f.deliveryDays;
   var next   = acNextDelivDate(days);
   var dateEl = document.getElementById('acDeliveryDate');
   var subEl  = document.getElementById('acDeliverySub');
-  if (dateEl) dateEl.textContent = AC_DAY_FULL[next.getDay()] + ', ' + AC_MONTHS[next.getMonth()] + ' ' + next.getDate();
-  if (subEl)  subEl.textContent  = f.plan + ' Plan · ' + (f.plan === 'Plus' ? 'Daily delivery' : '3× per week');
+  if (dateEl) dateEl.textContent = days.length ? acFormatDate(next) : '—';
+  if (subEl)  subEl.textContent  = f.plan + ' Plan · ' + acFrequencyLabel(days, f.plan);
   var row = document.getElementById('acScheduleRow');
   if (!row) return;
   var html = '';
@@ -4766,25 +4783,49 @@ function acToggleNameEdit() {
 }
 
 // ── Delivery edit modal ──
+
+// Update the "next delivery" preview line inside the modal from the current acEditDays
+function acDelivPreviewUpdate() {
+  var el = document.getElementById('acDelivPreview');
+  if (!el) return;
+  if (!acEditDays.length) {
+    el.textContent = 'No delivery days selected.';
+    return;
+  }
+  var next = acNextDelivDate(acEditDays);
+  el.innerHTML = 'Next delivery: <strong>' + acFormatDate(next) + '</strong>';
+}
+
 function acOpenDeliveryEdit() {
   var f = acFormulas[acActiveIdx];
   if (!f) return;
+
+  // Seed modal from this formula's own schedule (not a global)
   acEditDays = f.deliveryDays.slice();
-  acBuildDayButtons(f.plan);
+
+  // Label modal with the formula name so it's clear which is being edited
+  var titleEl = document.getElementById('acDelivModalTitle');
+  if (titleEl) titleEl.textContent = 'Edit delivery — ' + f.name;
+
+  acBuildDayButtons(f.plan);   // builds buttons + triggers preview
+
+  // Prefill address from user profile (the profile always reflects the latest save)
   var user = acGetUser();
-  var orders = acGetOrders();
-  var lat = orders.length ? orders[orders.length - 1] : {};
-  var del = lat.delivery || {};
-  var aEl = document.getElementById('acDelivAddress'); if (aEl) aEl.value = user.address || del.address || '';
-  var cEl = document.getElementById('acDelivCity');    if (cEl) cEl.value = user.city    || del.city    || '';
+  var aEl = document.getElementById('acDelivAddress'); if (aEl) aEl.value = user.address || '';
+  var cEl = document.getElementById('acDelivCity');    if (cEl) cEl.value = user.city    || '';
+
   document.getElementById('acDelivModal').classList.add('open');
 }
 
+// Build the day-toggle buttons for the edit modal.
+// Enforces: Base plan → max 3 days; all others → unlimited.
+// Disabled buttons have both the CSS class and the HTML attribute set
+// so they are inert on all browsers and pointer devices.
 function acBuildDayButtons(plan) {
   var wrap = document.getElementById('acDelivDays');
   if (!wrap) return;
-  var maxDays  = plan === 'Plus' ? 7 : 3;
-  var atLimit  = plan !== 'Plus' && acEditDays.length >= maxDays;
+  var maxDays = plan === 'Plus' ? 7 : 3;
+  var atLimit = plan !== 'Plus' && acEditDays.length >= maxDays;
   var html = '';
   for (var d = 0; d < 7; d++) {
     var isOn  = acEditDays.indexOf(d) !== -1;
@@ -4794,42 +4835,54 @@ function acBuildDayButtons(plan) {
       + ' onclick="acToggleDay(' + d + ')">' + AC_DAY_S[d] + '</button>';
   }
   wrap.innerHTML = html;
+  acDelivPreviewUpdate();  // keep preview in sync with current selection
 }
 
+// Toggle a delivery day on/off for the formula currently being edited.
+// Reads plan from acFormulas[acActiveIdx] — not from any global flag.
 function acToggleDay(d) {
   var f = acFormulas[acActiveIdx];
   if (!f) return;
   var maxDays = f.plan === 'Plus' ? 7 : 3;
   var idx = acEditDays.indexOf(d);
   if (idx !== -1) {
+    // Deselect: keep at least 1 day always active
     if (acEditDays.length <= 1) return;
     acEditDays.splice(idx, 1);
   } else {
+    // Select: enforce max for Base plan
     if (f.plan !== 'Plus' && acEditDays.length >= maxDays) return;
     acEditDays.push(d);
     acEditDays.sort(function(a, b) { return a - b; });
   }
+  // Rebuild buttons (re-evaluates disabled states) and preview
   acBuildDayButtons(f.plan);
 }
 
+// Commit the edited schedule back to the formula object and persist it.
+// Writes only to the scoped fstate key for this formula's id — never overwrites
+// another formula's days.
 function acSaveDelivery() {
   var f = acFormulas[acActiveIdx];
   if (!f) return;
+
+  // Write back to the in-memory formula object
   f.deliveryDays = acEditDays.slice();
 
-  // Persist delivery days in formula state
+  // Persist per-formula delivery days under this formula's id
   var state = acGetFormulaState();
   if (!state[f.id]) state[f.id] = {};
   state[f.id].deliveryDays = f.deliveryDays;
   acSaveFormulaState(state);
 
-  // Also save address to user profile
+  // Save delivery address to the user profile (address is per-user, not per-formula)
   var u = acGetUser();
   var aEl = document.getElementById('acDelivAddress'); if (aEl) u.address = aEl.value.trim();
   var cEl = document.getElementById('acDelivCity');    if (cEl) u.city    = cEl.value.trim();
   acSaveUser(u);
 
   document.getElementById('acDelivModal').classList.remove('open');
+  // Re-render the delivery section from the updated formula
   acRenderDelivery(f);
   acShowToast('Delivery schedule saved.');
 }
