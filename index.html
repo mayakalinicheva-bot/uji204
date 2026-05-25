@@ -3369,11 +3369,11 @@ function switchPage(name) {
   document.querySelectorAll('.app-page').forEach(function(p) { p.style.display = 'none'; });
   var target = document.getElementById('page-' + name);
   if (target) { target.style.display = 'block'; window.scrollTo(0, 0); }
-  // About floating island: show only on About page
+
+  // About floating island
   var island = document.getElementById('navIslandAbout');
   if (island) {
     if (name === 'about') {
-      // Clear any inline overrides left by goToHome() before animating in
       island.style.transition = '';
       island.style.opacity = '';
       island.style.visibility = '';
@@ -3385,11 +3385,23 @@ function switchPage(name) {
       island.classList.remove('visible');
     }
   }
-  if (name === 'card') { window.cp = ''; window.cpProd = 'ion'; selections = {}; selectedPlan = null; subPeriod = { base: 'monthly', plus: 'monthly' }; }
+
+  // Card pages: reset builder state
+  if (name === 'card')     { window.cp = '';   window.cpProd = 'ion'; selections = {}; selectedPlan = null; subPeriod = { base: 'monthly', plus: 'monthly' }; }
   if (name === 'card-neu') { window.cp = 'n-'; window.cpProd = 'neu'; selections = {}; selectedPlan = null; subPeriod = { base: 'monthly', plus: 'monthly' }; }
   if (name === 'card-nox') { window.cp = 'x-'; window.cpProd = 'nox'; selections = {}; selectedPlan = null; subPeriod = { base: 'monthly', plus: 'monthly' }; }
+
+  // Card pages: progress track
+  document.querySelectorAll('.progress-track').forEach(function(t) { t.classList.remove('visible'); });
+  var trackId = name === 'card-neu' ? 'n-progressTrack' : name === 'card-nox' ? 'x-progressTrack' : 'progressTrack';
+  var track = document.getElementById(trackId);
+  if (track && (name === 'card' || name === 'card-neu' || name === 'card-nox')) {
+    track.classList.add('visible');
+    updateProgress(1);
+  }
+
+  // Home: reset product builder UI
   if (name === 'home') {
-    // reset both cards
     ['', 'n-', 'x-'].forEach(function(p) {
       [2,3,4].forEach(function(i) {
         var s = document.getElementById(p + 'step' + i);
@@ -3400,6 +3412,15 @@ function switchPage(name) {
     var hl = document.getElementById('headerIngredient');
     if (hl) hl.classList.remove('show');
   }
+
+  // About: trigger entrance animations
+  if (name === 'about') initAboutAnimations();
+
+  // Checkout: initialize step state
+  if (name === 'checkout') setTimeout(coInitialize, 0);
+
+  // Account: rebuild formula state from current user's data
+  if (name === 'account') setTimeout(acLoad, 0);
 }
 
 function goToHome() {
@@ -3864,18 +3885,7 @@ function jumpToStep(step) {
   updateProgress(step);
 }
 
-// Show/hide progress track with card page
-var origSwitchPage = switchPage;
-switchPage = function(name) {
-  origSwitchPage(name);
-  // hide all progress tracks, show the right one
-  document.querySelectorAll('.progress-track').forEach(function(t) { t.classList.remove('visible'); });
-  var trackId = name === 'card-neu' ? 'n-progressTrack' : name === 'card-nox' ? 'x-progressTrack' : 'progressTrack';
-  var track = document.getElementById(trackId);
-  if (track && (name === 'card' || name === 'card-neu' || name === 'card-nox')) track.classList.add('visible');
-  if (name === 'card' || name === 'card-neu' || name === 'card-nox') updateProgress(1);
-  if (name === 'about') initAboutAnimations();
-};
+// (progress track + about animations handled inside switchPage)
 
 // ── MOBILE MENU ──
 function toggleMobileMenu() {
@@ -4322,35 +4332,37 @@ function coCompletePayment() {
 
 function coSaveOrder(ref) {
   try {
-    var fn  = (document.getElementById('coFirstName') || {}).value || '';
-    var ln  = (document.getElementById('coLastName')  || {}).value || '';
-    var em  = (document.getElementById('coEmail')     || {}).value || '';
-    var addr = (document.getElementById('coAddress')  || {}).value || '';
-    var city = (document.getElementById('coCity')     || {}).value || '';
-    var zip  = (document.getElementById('coZip')      || {}).value || '';
-    var cntry = (document.getElementById('coCountry') || {}).value || '';
+    var fn   = (document.getElementById('coFirstName') || {}).value || '';
+    var ln   = (document.getElementById('coLastName')  || {}).value || '';
+    var em   = ((document.getElementById('coEmail')    || {}).value || '').toLowerCase().trim();
+    var addr = (document.getElementById('coAddress')   || {}).value || '';
+    var city = (document.getElementById('coCity')      || {}).value || '';
+    var zip  = (document.getElementById('coZip')       || {}).value || '';
+    var cntry= (document.getElementById('coCountry')   || {}).value || '';
 
-    var orders = JSON.parse(localStorage.getItem('uji204_orders') || '[]');
+    // Establish user session — scopes all storage to this email
+    if (em) ujiSetSession(em);
+
+    var orders = acGetOrders();
     orders.push({
       orderId: ref, timestamp: Date.now(),
-      contact: { firstName: fn, lastName: ln, email: em },
+      contact:  { firstName: fn, lastName: ln, email: em },
       delivery: { address: addr, city: city, zip: zip, country: cntry },
       items: cart.slice()
     });
-    localStorage.setItem('uji204_orders', JSON.stringify(orders));
+    try { localStorage.setItem(ujiKey('orders'), JSON.stringify(orders)); } catch(e2) {}
 
-    // Save / update user profile
-    var existing = {};
-    try { existing = JSON.parse(localStorage.getItem('uji204_user') || '{}'); } catch(e2) {}
-    var cardEl = document.getElementById('coCardNum');
-    var last4 = cardEl ? cardEl.value.replace(/\s/g,'').slice(-4) : '••••';
-    localStorage.setItem('uji204_user', JSON.stringify(Object.assign(existing, {
+    // Save / update user profile (scoped to this user)
+    var existing = acGetUser();
+    var cardEl   = document.getElementById('coCardNum');
+    var last4    = cardEl ? cardEl.value.replace(/\s/g, '').slice(-4) : '••••';
+    acSaveUser(Object.assign(existing, {
       firstName: fn, lastName: ln, email: em,
       address: addr, city: city, zip: zip, country: cntry,
-      paymentType: window.coPayMethod || 'card',
+      paymentType:  window.coPayMethod || 'card',
       paymentLast4: window.coPayMethod === 'applepay' ? '' : last4,
-      createdAt: existing.createdAt || Date.now()
-    })));
+      createdAt:    existing.createdAt || Date.now()
+    }));
   } catch(e) {}
 }
 
@@ -4365,13 +4377,7 @@ function coFinish() {
   switchPage('home');
 }
 
-// Hook into switchPage to initialize checkout when navigating to it
-var _coOrigSwitch = switchPage;
-switchPage = function(name) {
-  _coOrigSwitch(name);
-  if (name === 'checkout') setTimeout(coInitialize, 0);
-  if (name === 'account')  setTimeout(acLoad, 0);
-};
+// (checkout + account initialization handled inside switchPage)
 
 // ══════════════════════════════════════
 // ACCOUNT SYSTEM
@@ -4422,22 +4428,60 @@ var acActiveIdx  = 0;    // index of selected formula card
 var acEditDays   = [];   // temp copy for delivery edit modal
 var acIngEditType = null; // which type is being edited in the modal
 
-// ── Storage helpers ──
+// ── User-scoped storage layer ──
+// All data is namespaced per email so different users on the same
+// device never see each other's orders, formulas, or profile.
+
+function ujiSession() {
+  return localStorage.getItem('uji204:session') || '';
+}
+function ujiSetSession(email) {
+  localStorage.setItem('uji204:session', (email || '').toLowerCase().trim());
+}
+function ujiKey(suffix) {
+  var email = ujiSession();
+  return 'uji204:' + (email || 'guest') + ':' + suffix;
+}
+
+// One-time migration: move legacy flat keys into scoped keys
+(function ujiMigrateLegacy() {
+  var oldOrders = localStorage.getItem('uji204_orders');
+  if (!oldOrders) return; // nothing to migrate
+  try {
+    var oldUser = {};
+    try { oldUser = JSON.parse(localStorage.getItem('uji204_user') || '{}'); } catch(e2) {}
+    var email = (oldUser.email || '').toLowerCase().trim();
+    if (email && !ujiSession()) {
+      ujiSetSession(email);
+      var key = 'uji204:' + email + ':';
+      if (!localStorage.getItem(key + 'orders'))  localStorage.setItem(key + 'orders',  oldOrders);
+      if (!localStorage.getItem(key + 'profile')) localStorage.setItem(key + 'profile', localStorage.getItem('uji204_user') || '{}');
+      var oldFs = localStorage.getItem('uji204_formula_state');
+      if (oldFs && !localStorage.getItem(key + 'fstate')) localStorage.setItem(key + 'fstate', oldFs);
+    }
+  } catch(e) {}
+  // Remove legacy unscoped keys so they can't contaminate new users
+  localStorage.removeItem('uji204_orders');
+  localStorage.removeItem('uji204_user');
+  localStorage.removeItem('uji204_formula_state');
+  localStorage.removeItem('uji204_ingredient_edits');
+})();
+
 function acGetOrders() {
-  try { return JSON.parse(localStorage.getItem('uji204_orders') || '[]'); } catch(e) { return []; }
+  try { return JSON.parse(localStorage.getItem(ujiKey('orders')) || '[]'); } catch(e) { return []; }
 }
 function acGetUser() {
-  try { return JSON.parse(localStorage.getItem('uji204_user') || '{}'); } catch(e) { return {}; }
+  try { return JSON.parse(localStorage.getItem(ujiKey('profile')) || '{}'); } catch(e) { return {}; }
 }
 function acSaveUser(u) {
-  try { localStorage.setItem('uji204_user', JSON.stringify(u)); } catch(e) {}
+  try { localStorage.setItem(ujiKey('profile'), JSON.stringify(u)); } catch(e) {}
 }
 // Per-formula persisted state: { [formulaId]: { ingredients: {matcha,base,compound}, deliveryDays: [] } }
 function acGetFormulaState() {
-  try { return JSON.parse(localStorage.getItem('uji204_formula_state') || '{}'); } catch(e) { return {}; }
+  try { return JSON.parse(localStorage.getItem(ujiKey('fstate')) || '{}'); } catch(e) { return {}; }
 }
 function acSaveFormulaState(state) {
-  try { localStorage.setItem('uji204_formula_state', JSON.stringify(state)); } catch(e) {}
+  try { localStorage.setItem(ujiKey('fstate'), JSON.stringify(state)); } catch(e) {}
 }
 
 // ── Data builder ──
