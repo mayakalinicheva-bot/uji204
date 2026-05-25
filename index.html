@@ -4428,7 +4428,8 @@ var AC_RECIPES = {
 // ── Account state ──
 var acFormulas   = [];   // built from orders on load; formula objects are the source of truth
 var acActiveIdx  = 0;    // index of selected formula card
-var acEditDays   = [];   // temp copy for delivery edit modal
+var acEditDays   = [];      // temp copy for delivery edit modal
+var acEditPlan   = 'Base'; // plan snapshot taken when delivery modal opens
 var acIngEditType = null; // which type is being edited in the modal
 
 // ── User-scoped storage layer ──
@@ -4522,8 +4523,13 @@ function acBuildFormulas(orders) {
         ing[t] = found || (opts.length ? opts[0] : { name: '—', color: '#F5F5F7' });
       });
 
-      // Default delivery days per plan
-      var defaultDays = plan === 'Plus' ? [1,2,3,4,5,6,0] : [1,3,5];
+      // Default delivery days per plan, offset by position so formulas
+      // look distinct before the user has edited them. Plus → all 7 days.
+      // Base → cycle through three non-overlapping Mon/Wed/Fri patterns.
+      var BASE_DAY_SETS = [[1,3,5],[2,4,6],[1,2,4],[3,5,6],[1,4,6]];
+      var defaultDays = plan === 'Plus'
+        ? [0,1,2,3,4,5,6]
+        : BASE_DAY_SETS[result.length % BASE_DAY_SETS.length];
       var delivDays   = (fstate.deliveryDays && fstate.deliveryDays.length)
                         ? fstate.deliveryDays.slice()
                         : defaultDays.slice();
@@ -4575,8 +4581,10 @@ function acLoad() {
   if (!orders.length) { switchPage('home'); return; }
   var user = acGetUser();
 
+  var prevIdx = acActiveIdx;          // snapshot before rebuild
   acFormulas  = acBuildFormulas(orders);
-  acActiveIdx = 0;
+  // Restore previous selection if it still exists; otherwise fall back to 0
+  acActiveIdx = (prevIdx > 0 && prevIdx < acFormulas.length) ? prevIdx : 0;
 
   var fn = (user.firstName ||
     (orders[orders.length-1].contact && orders[orders.length-1].contact.firstName) ||
@@ -4691,7 +4699,7 @@ function acRenderPlan(f) {
   if (me) me.innerHTML =
     '<div class="ac-plan-meta-row"><span>Billing</span><span>' + f.period + '</span></div>' +
     '<div class="ac-plan-meta-row"><span>Price</span><span>' + f.priceLabel + '</span></div>' +
-    '<div class="ac-plan-meta-row"><span>Delivery</span><span>' + (f.plan === 'Plus' ? 'Daily' : '3× / week') + '</span></div>';
+    '<div class="ac-plan-meta-row"><span>Delivery</span><span>' + acFrequencyLabel(f.deliveryDays, f.plan) + '</span></div>';
 }
 
 function acRenderIngredients(f) {
@@ -4800,14 +4808,15 @@ function acOpenDeliveryEdit() {
   var f = acFormulas[acActiveIdx];
   if (!f) return;
 
-  // Seed modal from this formula's own schedule (not a global)
+  // Snapshot both days and plan at open time so the modal is
+  // self-contained and immune to acActiveIdx changing elsewhere.
   acEditDays = f.deliveryDays.slice();
+  acEditPlan = f.plan;
 
-  // Label modal with the formula name so it's clear which is being edited
   var titleEl = document.getElementById('acDelivModalTitle');
   if (titleEl) titleEl.textContent = 'Edit delivery — ' + f.name;
 
-  acBuildDayButtons(f.plan);   // builds buttons + triggers preview
+  acBuildDayButtons();   // reads acEditPlan, not acActiveIdx
 
   // Prefill address from user profile (the profile always reflects the latest save)
   var user = acGetUser();
@@ -4821,11 +4830,12 @@ function acOpenDeliveryEdit() {
 // Enforces: Base plan → max 3 days; all others → unlimited.
 // Disabled buttons have both the CSS class and the HTML attribute set
 // so they are inert on all browsers and pointer devices.
-function acBuildDayButtons(plan) {
+// Reads acEditPlan (snapshotted at modal open) — never acActiveIdx.
+function acBuildDayButtons() {
   var wrap = document.getElementById('acDelivDays');
   if (!wrap) return;
-  var maxDays = plan === 'Plus' ? 7 : 3;
-  var atLimit = plan !== 'Plus' && acEditDays.length >= maxDays;
+  var maxDays = acEditPlan === 'Plus' ? 7 : 3;
+  var atLimit = acEditPlan !== 'Plus' && acEditDays.length >= maxDays;
   var html = '';
   for (var d = 0; d < 7; d++) {
     var isOn  = acEditDays.indexOf(d) !== -1;
@@ -4835,28 +4845,22 @@ function acBuildDayButtons(plan) {
       + ' onclick="acToggleDay(' + d + ')">' + AC_DAY_S[d] + '</button>';
   }
   wrap.innerHTML = html;
-  acDelivPreviewUpdate();  // keep preview in sync with current selection
+  acDelivPreviewUpdate();
 }
 
-// Toggle a delivery day on/off for the formula currently being edited.
-// Reads plan from acFormulas[acActiveIdx] — not from any global flag.
+// Reads acEditPlan — not acFormulas[acActiveIdx].
 function acToggleDay(d) {
-  var f = acFormulas[acActiveIdx];
-  if (!f) return;
-  var maxDays = f.plan === 'Plus' ? 7 : 3;
+  var maxDays = acEditPlan === 'Plus' ? 7 : 3;
   var idx = acEditDays.indexOf(d);
   if (idx !== -1) {
-    // Deselect: keep at least 1 day always active
     if (acEditDays.length <= 1) return;
     acEditDays.splice(idx, 1);
   } else {
-    // Select: enforce max for Base plan
-    if (f.plan !== 'Plus' && acEditDays.length >= maxDays) return;
+    if (acEditPlan !== 'Plus' && acEditDays.length >= maxDays) return;
     acEditDays.push(d);
     acEditDays.sort(function(a, b) { return a - b; });
   }
-  // Rebuild buttons (re-evaluates disabled states) and preview
-  acBuildDayButtons(f.plan);
+  acBuildDayButtons();
 }
 
 // Commit the edited schedule back to the formula object and persist it.
